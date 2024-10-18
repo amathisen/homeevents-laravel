@@ -1,0 +1,13 @@
+{
+ "find_what_array": ["get_href", "get_referring_results", "homeevents", "DB_DATABASE", "class DB ex", "class DB", "function select", "welcome"],
+ "find_what": "get_href",
+ "replace_with_array": [],
+ "replace_with": "",
+ "files_array": ["*.*", "*.c;*.cpp;*.cxx;*.cc;*.h;*.hpp;*.inc;*.mm;*.m;*.xrc", "*.c;*.cpp;*.cxx;*.cc;*.h;*.hpp;*.inc;*.mm;*.m;*.xrc", "*.cpp;*.cc;*.c;*.hpp;*.h;CMakeLists.txt;*.plist;*.rc"],
+ "files": "*.*",
+ "where_array": ["<Workspace Folder>;<Entire Workspace>", "<Workspace Folder>"],
+ "where": "<Workspace Folder>;<Entire Workspace>",
+ "encoding": "ISO-8859-1",
+ "flags": 4096,
+ "files_scanner_flags": 1
+}
