@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 #[AllowDynamicProperties]
 
 class Blank extends Model {
     public $id = null;
     private $table_name = null;
+    private $initial_values = array();
 
     // Constructor to create the activity. Pass in an ID to populate values for that activity
     public function __construct($initial_table = null,$initial_id = null) {
@@ -34,6 +36,7 @@ class Blank extends Model {
         if(isset($db_obj->id) && (int)$db_obj->id === $base_id) {
             foreach($db_obj as $key => $value) {
                 $this->$key = $value;
+                $this->initial_values[$key] = $value;
             }
             return true;
         } else
@@ -112,8 +115,8 @@ class Blank extends Model {
     
     public function save($delete=false) {
 
-        $table_data = DB::getSchemaBuilder()->getColumnListing($this->table_name);
-        
+        $table_data = DB::getSchemaBuilder()->getColumns($this->table_name);
+
         if(!$table_data)
             return false;
 
@@ -123,15 +126,26 @@ class Blank extends Model {
         }
 
         $key_vals = array();
-        
+
+        ($this->id == null || !is_int((int)$this->id) || $this->id < 0 || $this->table_name == null) ? $inserting = true : $inserting = false;
+
         foreach($table_data as $this_column) {
-            if($this_column == 'id') continue;
-            $tmp = $this->get_value($this_column);
-            if($this_column == 'date' && !$tmp) continue;
-            $key_vals[$this_column] = $tmp;
+            if($this_column['name'] == 'id')
+                continue;
+
+            $tmp = $this->get_value($this_column['name']);
+            if(!$this->validate_value($this_column['name'],$tmp,$this_column))
+                continue;
+
+            if($inserting || (!$inserting && $tmp != $this->initial_values[$this_column['name']]))
+                $key_vals[$this_column['name']] = $tmp;
         }
-        
-        if($this->id == null || !is_int((int)$this->id) || $this->id < 0 || $this->table_name == null)
+
+        if(!count($key_vals)) {
+            return;
+        }
+
+        if($inserting)
             $this->id = DB::table($this->table_name)->insertGetId($key_vals);
         else
             DB::table($this->table_name)->where('id',$this->id)->update($key_vals);
@@ -229,6 +243,49 @@ class Blank extends Model {
         return $html_string;
     }
     
+    public function validate_value($field_name,$test_val,$column_data=null) {
+        
+        $validate_rules = array();
+
+        if($column_data == null) {
+            $table_data = DB::getSchemaBuilder()->getColumns($this->table_name);
+            foreach($table_data as $this_column) {
+                if($this_column['name'] == $field_name) {
+                    $column_data = $this_column;
+                    break;
+                }
+            }
+        }
+
+        if(isset($column_data['nullable']) && $column_data['nullable'] == 1 && $test_val == null)
+            return true;
+
+        switch($column_data['type_name']) {
+            case 'int':
+                array_push($validate_rules,"integer");
+            break;
+            case 'varchar':
+                array_push($validate_rules,"string");
+                sscanf($column_data['type'],"varchar(%d)",$column_length);
+                array_push($validate_rules,"max:" . $column_length);
+            break;
+            case 'date':
+            case 'timestamp':
+                array_push($validate_rules,"date");
+            break;
+            default:
+                return false;
+        }
+
+        $validator = Validator::make(data: [$field_name => $test_val],rules: [$field_name => $validate_rules]);
+        
+        if ($validator->fails()) {
+            return false;
+        }
+        
+        return true;
+    }
+
     public function get_href() {
         $href_html = "<a href = '" . $this->table_name . "/" . $this->id . "'>";
         $test_properties = array("name","title");
