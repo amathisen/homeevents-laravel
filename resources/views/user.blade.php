@@ -50,7 +50,7 @@
                     <td colspan="3" class="title">{!!$this_event->get_href()!!} {{$this_event->date}}</td>
                 </tr>
                 @foreach($this_event->activity_details as $this_activity)
-                    <tr class="alternate_background">
+                    <tr>
                         <td>{{$this_activity['this_activity_name']}}</td>
                         <td>
                             {{$this_activity['activity_name']}}

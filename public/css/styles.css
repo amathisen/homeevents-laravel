@@ -1,14 +1,10 @@
-table.block {
+table.block td {
     border: 1px solid;
-}
-
-tr.alternate_background:nth-child(even) {
-    background-color: #d61818;
-    border: 1px solid;
-}
-
-td {
     vertical-align: top;
+}
+
+table.block tr:nth-child(even) {
+    background-color: #D61818;
 }
 
 td.indent {
