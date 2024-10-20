@@ -13,11 +13,10 @@ class UsersController extends Controller
         $results_tracker = array();
         $results_objects_tracker = array();
         $results_block = array();
-        $event_activities_block = array();
 
         foreach($events as $this_event) {
             $event_activities = $this_event->get_referring_results('event_activities');
-            $event_activities_block[$this_event->id] = array();
+            $this_event->activity_details = array();
             foreach($event_activities as $this_activity) {
                 $activity = $this_activity->get_associated_result('activity');
                 $result = $this_activity->get_referring_results('event_activities_results',array('users_id',$user->id));
@@ -44,10 +43,12 @@ class UsersController extends Controller
                     $result_value = "--";
                     $results_object_name = null;
                 }
-                $activity_details = array('this_activity_name' => $this_activity->name, 'activity_name' => $activity->name, 'result_value' => $result_value);
-                if($results_object_name != null)
-                    $activity_details['results_object_name'] = $results_object_name;
-                array_push($event_activities_block[$this_event->id],$activity_details);
+                $activity_details = array(
+                                        'this_activity_name' => $this_activity->name,
+                                        'activity_name' => $activity->name,
+                                        'result_value' => $result_value,
+                                        'results_object_name' => $results_object_name);
+                $this_event->activity_details = array_merge($this_event->activity_details,array($activity_details));
             }
         }
 
@@ -80,6 +81,6 @@ class UsersController extends Controller
             array_push($results_block,$these_results);
         }
 
-        return view('user',compact("user","events","results_block","event_activities_block"));
+        return view('user',compact("user","events","results_block"));
     }
 }
