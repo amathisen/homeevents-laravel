@@ -287,7 +287,7 @@ class Blank extends Model {
     }
 
     public function get_href() {
-        $href_html = "<a href = '" . $this->table_name . "/" . $this->id . "'>";
+        $href_html = "<a href = '/" . $this->table_name . "/" . $this->id . "'>";
         $test_properties = array("name","title");
         foreach($test_properties as $this_property) {
             if(isset($this->$this_property))

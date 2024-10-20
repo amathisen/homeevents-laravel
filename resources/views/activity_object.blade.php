@@ -27,7 +27,12 @@
         <br><hr><br>
         <table>
         @foreach($events as $this_event)
-            <tr><td>{{$this_event->date}}</td><td>{!!$this_event->get_href();!!}</td><td>{{$this_event->event_activities_name}}</td><td>{{$this_event->event_activities_results_result_value}}</td></tr>
+            <tr>
+                <td>{{$this_event->date}}</td>
+                <td>{!!$this_event->get_href();!!}</td>
+                <td>{{$this_event->event_activities_name}}</td>
+                <td>{{$this_event->event_activities_results_result_value}}</td>
+            </tr>
         @endforeach
         </table>
     </body>

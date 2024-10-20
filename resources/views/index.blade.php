@@ -22,7 +22,10 @@
     <body class="font-sans antialiased dark:bg-black dark:text-white/50">
         <table>
         @foreach($all_events as $this_event)
-            <tr><td>{!!$this_event->get_href();!!}</td><td>{{$this_event->date;}}</td></tr>
+            <tr>
+                <td>{!!$this_event->get_href();!!}</td>
+                <td>{{$this_event->date;}}</td>
+            </tr>
         @endforeach
         </table>
         
@@ -30,7 +33,9 @@
         
         <table>
         @foreach($all_users as $this_user)
-            <tr><td>{!!$this_user->get_href();!!}</td></tr>
+            <tr>
+                <td>{!!$this_user->get_href();!!}</td>
+            </tr>
         @endforeach
         </table>
 
@@ -38,7 +43,9 @@
         
         <table>
         @foreach($all_activity_objects as $this_activity_object)
-            <tr><td>{!!$this_activity_object->get_href();!!}</td></tr>
+            <tr>
+                <td>{!!$this_activity_object->get_href();!!}</td>
+            </tr>
         @endforeach
         </table>
 

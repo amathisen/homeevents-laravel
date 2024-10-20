@@ -1,0 +1,20 @@
+table.block {
+    border: 1px solid;
+}
+
+tr.alternate_background:nth-child(even) {
+    background-color: #d61818;
+    border: 1px solid;
+}
+
+td {
+    vertical-align: top;
+}
+
+td.indent {
+    padding-left: 10px
+}
+
+td.title {
+    font-weight:bold;
+}
