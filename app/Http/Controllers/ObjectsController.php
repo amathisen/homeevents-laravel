@@ -40,7 +40,32 @@ class ObjectsController extends Controller
         
         $fields = $this_obj->get_form_array(editable:true);
         (isset($this_obj->id)) ? $submit_text = "Update" : $submit_text = "Create";
-        return view('objects',compact("page_title","fields","submit_text"));
+        return view('objects',compact("page_title","object_type","object_id","fields","submit_text"));
     }
     
+    public function object_crud(Request $request) {
+        $object_type = $request->input('object_type');
+        $object_id = $request->input('id');
+        $delete = $request->input('delete');
+        $tmp_obj = new Blank($object_type,$object_id);
+        
+        if($delete === "solongfarewell") {
+            $tmp_obj->save(delete:"DELETE");
+            return redirect()->route('show_objects',['object_type' => $object_type]);
+        }
+
+        foreach($request->all() as $key => $value) {
+            if($key == "id")
+                continue;
+            $tmp_obj->set_value($key,$value);
+        }
+        
+        $tmp_obj->save();
+        if(!$tmp_obj->id) {
+            echo "Didn't save nothing :(";
+            exit;
+        }
+
+        return redirect()->route('show_object',['object_type' => $object_type, 'object_id' => $tmp_obj->id]);
+    }
 }

@@ -215,19 +215,18 @@ class Blank extends Model {
     public function write_form_field($field_name,$editable=false) {
         
         $html_string = array($field_name);
-        $field_identifier = $field_name . "_" . $this->id;
         
         if(!str_ends_with($field_name,"_id")) {
-            $html_string[1] = "<input type='text' name='" . $field_identifier . "' id='" . $field_identifier . "'";
+            $html_string[1] = "<input type='text' name='" . $field_name . "' id='" . $field_name . "'";
             if(isset($this->$field_name))
-                $html_string[1] .= " value='" . $this->$field_name . "'";
+                $html_string[1] .= " value='" . str_replace("'","&#39;",$this->$field_name) . "'";
             if($editable != true || $field_name == "id")
                 $html_string[1] .= " readonly='readonly'";
             if($field_name == "id")
                 $html_string[1] .= " size='5'";
             $html_string[1] .= ">";
         } else {
-            $html_string[1] = "<select name='" . $field_identifier . "' id='" . $field_identifier . "'";
+            $html_string[1] = "<select name='" . $field_name . "' id='" . $field_name . "'";
             if($editable != true)
                 $html_string[1] .= " disabled";
             $html_string[1] .= ">";
@@ -244,7 +243,7 @@ class Blank extends Model {
                 }
                 if($this_thing->id == $this->$field_name)
                     $html_string[1] .=  " selected";;
-                $html_string[1] .= ">" . $option_text . "</option>";
+                $html_string[1] .= ">" . str_replace("'","&#39;",$option_text) . "</option>";
             }
     
             $html_string[1] .= "</select>";
@@ -292,6 +291,7 @@ class Blank extends Model {
             break;
             case 'date':
             case 'timestamp':
+            case 'datetime':
                 array_push($validate_rules,"date");
             break;
             default:

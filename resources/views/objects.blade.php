@@ -34,17 +34,34 @@
 
 @if(isset($fields) && count($fields))
 <!-- Begin edit/create object -->
+    <a href = "/objects/{{$object_type}}">View All {{$object_type}}</a>
+    <br>
+    <br>
     <table>
-    <form>
-    @foreach($fields as $this_field)
-        <tr>
-            <td>{{$this_field[0]}}</td>
-            <td>{!!$this_field[1]!!}</td>
-        </tr>
-    @endforeach
-        <tr><td colspan="2"><input type="submit" value="{{$submit_text}}"></td></tr>
+    <form method="post" action="/objects/crud">
+        <input type="hidden" name="object_type" value="{{$object_type}}">
+        @csrf
+        @foreach($fields as $this_field)
+            <tr>
+                <td>{{$this_field[0]}}</td>
+                <td>{!!$this_field[1]!!}</td>
+            </tr>
+        @endforeach
+            <tr><td colspan="2"><input type="submit" value="{{$submit_text}}"></td></tr>
     </form>
     </table>
+    @if((int)$object_id > 0)
+        <br>
+        <br>
+        <br>
+        <form method="post" action="/objects/crud">
+            @csrf
+            <input type="hidden" name="object_type" value="{{$object_type}}">
+            <input type="hidden" name="id" value="{{$object_id}}">
+            <input type="hidden" name="delete" value="solongfarewell">
+            <input type="submit" value="Delete">
+        </form>
+    @endif
 <!-- End edit/create object -->
 @endif
 
