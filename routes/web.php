@@ -10,9 +10,9 @@ use App\Http\Controllers\UsersController;
 require_once(app_path() . '/define.php');
 
 Route::get('/', [HomeEventsController::class, 'index']);
-Route::get('/activity_object/{activity_object_id}', [ActivityObjectController::class, 'index']);
-Route::get('/users/{user_id}', [UsersController::class, 'index']);
-Route::get('/event/{event_id}', [EventsController::class, 'index']);
+Route::get('/activity_object/{activity_object_id}', [ActivityObjectController::class, 'index'])->name('activity_object_details');
+Route::get('/users/{user_id}', [UsersController::class, 'index'])->name('users_details');
+Route::get('/event/{event_id}', [EventsController::class, 'index'])->name('event_details');
 
 Route::post('/objects/crud', [ObjectsController::class, 'object_crud']);
 Route::get('/objects/{object_type}/{object_id}', [ObjectsController::class, 'object_edit'])->name('show_object');

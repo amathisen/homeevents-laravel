@@ -46,6 +46,7 @@ class ObjectsController extends Controller
         $object_type = $request->input('object_type');
         $object_id = $request->input('id');
         $delete = $request->input('delete');
+        $redirect_to = $request->input('redirect_to');
         $tmp_obj = new Blank($object_type,$object_id);
         
         if($delete === "solongfarewell") {
@@ -65,6 +66,6 @@ class ObjectsController extends Controller
             exit;
         }
 
-        return redirect()->route('show_object',['object_type' => $object_type, 'object_id' => $tmp_obj->id]);
+        return (!isset($redirect_to)) ? redirect()->route('show_object',['object_type' => $object_type, 'object_id' => $tmp_obj->id]) : redirect($redirect_to);
     }
 }
