@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,20 +22,17 @@ class Blank extends Model {
     
     //Pass in an activity ID to populate values for this object with that activity
     public function set_values_by_id($base_id) {
-        if(!Cache::store('file')->has('allowed_blank_tables')) {
-            $tables = DB::getSchemaBuilder()->getTableListing();
-            $tables = array_diff($tables,TABLESNONOBJECT);
-            Cache::store('file')->put('allowed_blank_tables', $tables, 6000);
-        }
-
-        if(!in_array($this->table_name,Cache::store('file')->get('allowed_blank_tables'))) {
+        
+        $tables = get_set_cache('allowed_blank_tables',"array_diff(DB::getSchemaBuilder()->getTableListing(),TABLESNONOBJECT);",CACHETIMEOUTS["SCHEMADATA"]);
+        if(!in_array($this->table_name,$tables)) {
             $this->table_name = null;
             $this->id = null;
             return false;
         }
 
         if($base_id == null || !is_int($base_id) || (int)$base_id < 0) {
-           $schema = DB::getSchemaBuilder()->getColumnListing($this->table_name);
+            $schema = get_set_cache('column_listing_' . $this->table_name,"DB::getSchemaBuilder()->getColumnListing('" . $this->table_name . "');",CACHETIMEOUTS["SCHEMADATA"]);
+
            foreach($schema as $this_field) {
                $this->set_value($this_field,null);
            }
@@ -127,8 +123,8 @@ class Blank extends Model {
     
     public function save($delete=false) {
 
-        $table_data = DB::getSchemaBuilder()->getColumns($this->table_name);
-
+        $table_data = get_set_cache('schema_data_' . $this->table_name,"DB::getSchemaBuilder()->getColumns('" . $this->table_name . "');",CACHETIMEOUTS["SCHEMADATA"]);
+        
         if(!$table_data)
             return false;
 
@@ -254,7 +250,7 @@ class Blank extends Model {
     
     public function get_form_array($editable=false) {
         $form_fields = array();
-        $columns_to_check = DB::getSchemaBuilder()->getColumnListing($this->table_name);
+        $columns_to_check = get_set_cache('column_listing_' . $this->table_name,"DB::getSchemaBuilder()->getColumnListing('" . $this->table_name . "');",CACHETIMEOUTS["SCHEMADATA"]);
         
         foreach($columns_to_check as $this_column) {
             array_push($form_fields,$this->write_form_field($this_column,$editable));
@@ -268,7 +264,7 @@ class Blank extends Model {
         $validate_rules = array();
 
         if($column_data == null) {
-            $table_data = DB::getSchemaBuilder()->getColumns($this->table_name);
+            $table_data = get_set_cache('schema_data_' . $this->table_name,"DB::getSchemaBuilder()->getColumns(" . $this->table_name . ");",CACHETIMEOUTS["SCHEMADATA"]);
             foreach($table_data as $this_column) {
                 if($this_column['name'] == $field_name) {
                     $column_data = $this_column;

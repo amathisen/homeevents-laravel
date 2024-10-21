@@ -7,6 +7,8 @@ use App\Http\Controllers\HomeEventsController;
 use App\Http\Controllers\ObjectsController;
 use App\Http\Controllers\UsersController;
 
+require_once(app_path() . '/define.php');
+
 Route::get('/', [HomeEventsController::class, 'index']);
 Route::get('/activity_object/{activity_object_id}', [ActivityObjectController::class, 'index']);
 Route::get('/users/{user_id}', [UsersController::class, 'index']);

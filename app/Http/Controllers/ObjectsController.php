@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blank;
+use App\Helpers\helpers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -10,9 +11,7 @@ class ObjectsController extends Controller
 {
     public function index() {
         $page_title = "All the Things";
-        $tables = DB::getSchemaBuilder()->getTableListing();
-        $tables = array_diff($tables,TABLESNONOBJECT);
-        
+        $tables = get_set_cache('allowed_blank_tables',"array_diff(DB::getSchemaBuilder()->getTableListing(),TABLESNONOBJECT);",CACHETIMEOUTS["SCHEMADATA"]);
         return view('objects',compact("page_title","tables"));
     }
     
