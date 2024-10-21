@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -22,9 +23,13 @@ class Blank extends Model {
     
     //Pass in an activity ID to populate values for this object with that activity
     public function set_values_by_id($base_id) {
-        $tables = DB::getSchemaBuilder()->getTableListing();
-        $tables = array_diff($tables,TABLESNONOBJECT);
-        if(!in_array($this->table_name,$tables)) {
+        if(!Cache::store('file')->has('allowed_blank_tables')) {
+            $tables = DB::getSchemaBuilder()->getTableListing();
+            $tables = array_diff($tables,TABLESNONOBJECT);
+            Cache::store('file')->put('allowed_blank_tables', $tables, 6000);
+        }
+
+        if(!in_array($this->table_name,Cache::store('file')->get('allowed_blank_tables'))) {
             $this->table_name = null;
             $this->id = null;
             return false;
