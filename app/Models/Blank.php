@@ -200,12 +200,10 @@ class Blank extends Model {
         return $results_list;
     }
     
-    public function write_form_field($field_name,$id_value = "",$editable=false) {
+    public function write_form_field($field_name,$editable=false) {
         
-        $html_string = array("<b>" . $field_name ."</b>","");
+        $html_string = array($field_name);
         $field_identifier = $field_name . "_" . $this->id;
-        if($id_value != "")
-            $field_identifier .= "_" . $id_value;
         
         if(!str_ends_with($field_name,"_id")) {
             $html_string[1] = "<input type='text' name='" . $field_identifier . "' id='" . $field_identifier . "'";
@@ -241,6 +239,17 @@ class Blank extends Model {
         }
         
         return $html_string;
+    }
+    
+    public function get_form_array($editable=false) {
+        $form_fields = array();
+        $columns_to_check = DB::getSchemaBuilder()->getColumnListing($this->table_name);
+        
+        foreach($columns_to_check as $this_column) {
+            array_push($form_fields,$this->write_form_field($this_column,$editable));
+        }
+        
+        return $form_fields;
     }
     
     public function validate_value($field_name,$test_val,$column_data=null) {
