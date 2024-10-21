@@ -1,7 +1,7 @@
 @include('header')
 
-<!-- Begin show object types -->
 @if(isset($tables) && count($tables))
+<!-- Begin show object types -->
     <table class="block">
     @foreach($tables as $this_table)
         <tr>
@@ -10,11 +10,11 @@
         </tr>
     @endforeach
     </table>
-@endif
 <!-- End show object types -->
+@endif
 
-<!-- Begin show objects -->
 @if(isset($row_results) && count($row_results))
+<!-- Begin show objects -->
     <a href = "/objects/{{$object_type}}/new">Add New</a>
     <br>
     <br>
@@ -29,11 +29,11 @@
         </tr>
     @endforeach
     </table>
-@endif
 <!-- End show objects -->
+@endif
 
-<!-- Begin edit/create object -->
 @if(isset($fields) && count($fields))
+<!-- Begin edit/create object -->
     <table>
     <form>
     @foreach($fields as $this_field)
@@ -45,7 +45,7 @@
         <tr><td colspan="2"><input type="submit" value="{{$submit_text}}"></td></tr>
     </form>
     </table>
-@endif
 <!-- End edit/create object -->
+@endif
 
 @include('footer')
