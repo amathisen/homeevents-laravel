@@ -4,7 +4,7 @@ table.block td {
 }
 
 table.block tr:nth-child(even) {
-    background-color: #D61818;
+    background-color: #82CFDF;
 }
 
 td.indent {

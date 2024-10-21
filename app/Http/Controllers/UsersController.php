@@ -9,11 +9,12 @@ class UsersController extends Controller
 {
     public function index($user_id) {
         $user = new Blank('users',$user_id);
+        $page_title = "User - " . $user->name;
         $events = $user->get_referring_results_by_link('event_users','event');
         $results_tracker = array();
         $results_objects_tracker = array();
         $results_block = array();
-
+        
         foreach($events as $this_event) {
             $event_activities = $this_event->get_referring_results('event_activities');
             $this_event->activity_details = array();
@@ -81,6 +82,6 @@ class UsersController extends Controller
             array_push($results_block,$these_results);
         }
 
-        return view('user',compact("user","events","results_block"));
+        return view('user',compact("page_title","user","events","results_block"));
     }
 }

@@ -9,7 +9,8 @@ class ActivityObjectController extends Controller
 {
     public function index($activity_object_id) {
         
-        $activity_object = new Blank('activity_object',$activity_object_id);        
+        $activity_object = new Blank('activity_object',$activity_object_id);
+        $page_title = "Activity Object - " . $activity_object->name;
         $event_activities_results_objects = $activity_object->get_referring_results('event_activities_results_objects');
         $results_values = array();
         $events = array();
@@ -25,6 +26,6 @@ class ActivityObjectController extends Controller
             array_push($results_values,$event_activities_results->result_value);
         }
         
-        return view('activity_object',compact("activity_object","event_activities_results_objects","events","results_values"));
+        return view('activity_object',compact("page_title","activity_object","event_activities_results_objects","events","results_values"));
     }
 }

@@ -9,6 +9,7 @@ class EventsController extends Controller
 {
     public function index($event_id) {
         $event = new Blank('event',$event_id);
+        $page_title = "Event - " . $event->title;
         $users = $event->get_referring_results_by_link('event_users','users');
         $location = $event->get_associated_result('location');
         $event_activities = $event->get_referring_results('event_activities');
@@ -47,6 +48,6 @@ class EventsController extends Controller
             array_push($activity_block,$this_activity_block);
         }
 
-        return view('event',compact("event","users","location","activity_block"));
+        return view('event',compact("page_title","event","users","location","activity_block"));
     }
 }
