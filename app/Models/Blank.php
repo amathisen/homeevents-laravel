@@ -15,13 +15,20 @@ class Blank extends Model {
 
     // Constructor to create the activity. Pass in an ID to populate values for that activity
     public function __construct($initial_table = null,$initial_id = null) {
-            $this->table_name = $initial_table;
+            $this->table_name = trim(strtolower($initial_table));
             $this->id = (int)$initial_id;
-            $this->set_values_by_id((int)$initial_id);
+            return $this->set_values_by_id((int)$initial_id);
     }
     
     //Pass in an activity ID to populate values for this object with that activity
     public function set_values_by_id($base_id) {
+        $tables = DB::getSchemaBuilder()->getTableListing();
+        $tables = array_diff($tables,TABLESNONOBJECT);
+        if(!in_array($this->table_name,$tables)) {
+            $this->table_name = null;
+            $this->id = null;
+            return false;
+        }
 
         if($base_id == null || !is_int($base_id) || (int)$base_id < 0) {
            $schema = DB::getSchemaBuilder()->getColumnListing($this->table_name);

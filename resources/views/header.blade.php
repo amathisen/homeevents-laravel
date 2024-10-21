@@ -14,4 +14,7 @@
         <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50">
-    <a href = "/">Home</a>
+    <a href = "/">Home</a>&nbsp;&nbsp;<a href = "/objects">Objects</a>
+    <br>
+    <br>
+    {{-- @include('topnav') --}}
