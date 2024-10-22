@@ -15,6 +15,8 @@ class EventsController extends Controller
         $event_activities = $event->get_referring_results('event_activities');
         $activity_block = array();
         $missing_results = array();
+        $activity_objects = new Blank('activity_object');
+        $activity_objects = $activity_objects->get_all(sort_by:'name');
         
         foreach($event_activities as $this_activity) {
             $activity = $this_activity->get_associated_result('activity');
@@ -28,10 +30,13 @@ class EventsController extends Controller
                 if(isset($this_result[0]))
                     $this_result = $this_result[0];
                 if(!isset($this_result->id)) {
-                    array_push($missing_results,array($this_activity->id,$this_user->id));
+                    $this_activity_object_type = $activity->get_referring_results('activity_object_type');
+                    $this_missing_result = array("event_activities_id" => $this_activity->id,"users_id" => $this_user->id,"users_name" => $this_user->name,"event_activities_name" => $this_activity->name, "activity_name" => $activity->name, "activity_id" => $activity->id);
+                    if(count($this_activity_object_type))
+                        $this_missing_result['activity_object_type_id'] = $this_activity_object_type[0]->id;
+                    array_push($missing_results,$this_missing_result);
                     continue;
                 }
-                
                 
                 $score_value = isset($this_result->result_value) ? $this_result->result_value : '';
                 $display_name = $this_user->get_href();
@@ -48,6 +53,15 @@ class EventsController extends Controller
             array_push($activity_block,$this_activity_block);
         }
 
-        return view('event',compact("page_title","event","users","location","activity_block"));
+        $missing_users = new Blank('users');
+        if(count($users))
+            $missing_users = $missing_users->get_all(limit_by:"id NOT IN(" . implode(",",array_column($users,'id')) . ")",sort_by:"name");
+        else
+            $missing_users = $missing_users->get_all();
+
+        $activities = new Blank('activity');
+        $activities = $activities->get_all();
+        
+        return view('event',compact("page_title","event","users","location","activity_block","missing_users","activities","missing_results","activity_objects"));
     }
 }

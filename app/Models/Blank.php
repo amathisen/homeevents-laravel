@@ -70,7 +70,7 @@ class Blank extends Model {
         $query->select('id');
 
         if($limit_by != null)
-            $query->where($limit_by);
+            $query->whereRaw($limit_by);
         if($sort_by != null)
             $query->orderBy($sort_by);
         

@@ -47,6 +47,7 @@ class ObjectsController extends Controller
         $object_id = $request->input('id');
         $delete = $request->input('delete');
         $redirect_to = $request->input('redirect_to');
+        $recursive_values = array();
         $tmp_obj = new Blank($object_type,$object_id);
         
         if($delete === "solongfarewell") {
@@ -57,6 +58,10 @@ class ObjectsController extends Controller
         foreach($request->all() as $key => $value) {
             if($key == "id")
                 continue;
+            if(str_starts_with($key,"RECURSIVE_")) {
+                $recursive_values[str_replace("RECURSIVE_","",$key)] = $value;
+                continue;
+            }
             $tmp_obj->set_value($key,$value);
         }
         
@@ -64,6 +69,17 @@ class ObjectsController extends Controller
         if(!$tmp_obj->id) {
             echo "Didn't save nothing :(";
             exit;
+        }
+        
+        if(count($recursive_values)) {
+            $second_obj_type = $recursive_values['OBJECTTYPE'];
+            unset($recursive_values['OBJECTTYPE']);
+            $recursive_values[$recursive_values['PREVIOUSIDTOFIELD']] = $tmp_obj->id;
+            unset($recursive_values['PREVIOUSIDTOFIELD']);
+            $second_obj = new Blank($second_obj_type);
+            foreach($recursive_values as $key => $value)
+                $second_obj->set_value($key,$value);
+            $second_obj->save();
         }
 
         return (!isset($redirect_to)) ? redirect()->route('show_object',['object_type' => $object_type, 'object_id' => $tmp_obj->id]) : redirect($redirect_to);
