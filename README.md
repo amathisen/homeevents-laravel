@@ -23,22 +23,19 @@ For each Activity attached to an Event, we record the Event Activity Result for 
 
 Each table in the database not listed in the app/define.php 'TABLESNONOBJECT' array is controlled via the Blank class (Models/Blank.php). If new tables are created, they will be able to be controlled by Blank unless added to this array.
 
-To create an object, call: $temp_object = new Blank('\<table name\>');, replacing \<table name\> with the table holding the object definition.
-To instantiate a specific instance of a record in the database, call $temp_object->set_values_by_id(\<id\>);, where \<id\> is the primary key of the object you'd like to access.
-To do this in one step (instantiate and load), call  $temp_object = new Blank('\<table name\>',\<id\>);
-
-For specific features of the Blank object type, view Models/Blank.php and play around, or leave me a message. If people want text, I'll provide it :)
+When instantiated, the resultant object will contain 
 
 
 ## File locations
-Here's where you can put custom stuff:
+Here's where you can put custom stuff. Functions/definitions placed in the following files are available application-wide:
+<pre>
 - css                    public/css/styles.css
-- js                     public/js/base.js
+- javascript functions   public/js/base.js
 - constant definitions   app/define.php
 - custom functions       app/Helpers/Helpers.php
+</pre>
 
-
-
+***
 
 #### Author
 By Aaron Mathisen
