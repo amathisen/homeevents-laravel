@@ -13,14 +13,14 @@ class Blank extends Model {
     private $table_name = null;
     private $initial_values = array();
 
-    // Constructor to create the activity. Pass in an ID to populate values for that activity
+    // Constructor to create a blank object. Pass in an ID to populate values for the matching id row in the DB
     public function __construct($initial_table = null,$initial_id = null) {
             $this->table_name = trim(strtolower($initial_table));
             $this->id = (int)$initial_id;
             return $this->set_values_by_id((int)$initial_id);
     }
     
-    //Pass in an activity ID to populate values for this object with that activity
+    //Pass in an id to populate values for this object with the matching row in the DB
     public function set_values_by_id($base_id) {
         
         $tables = get_set_cache('allowed_blank_tables',"array_diff(DB::getSchemaBuilder()->getTableListing(),TABLESNONOBJECT);",CACHETIMEOUTS["SCHEMADATA"]);
