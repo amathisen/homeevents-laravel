@@ -103,21 +103,19 @@ class Blank extends Model {
         $new_note->save();
     }
     
-    public function get_fk_value($base_value,$return_columns=array("name","title")) {
-        $tmp = $this->get_value($base_value);
-        if(!str_ends_with($base_value,"_id") || !$tmp)
+    public function get_fk_values($fk_field,$return_columns) {
+        $fk_id = $this->get_value($fk_field);
+        if(!str_ends_with($fk_field,"_id") || !(int)$fk_id)
             return false;
         
-        $fk_obj = new Blank(substr($base_value, 0, -3),$tmp);
-        $tmp_value = null;
-        
+        $fk_obj = new Blank(substr($fk_field, 0, -3),$fk_id);
+        $return_values = array();
+
         foreach($return_columns as $this_column) {
-            $tmp_value = $fk_obj->get_value($this_column);
-            if($tmp_value)
-                break;
+            $return_values[$this_column] = $fk_obj->get_value($this_column);
         }
 
-        return $tmp_value;
+        return $return_values;
         
     }
     
@@ -304,7 +302,12 @@ class Blank extends Model {
     }
 
     public function get_href() {
-        $href_html = "<a href = '/" . $this->table_name . "/" . $this->id . "'>";
+        
+        if(view()->exists($this->get_value('table_name')))
+            $href_html = "<a href = '/" . $this->table_name . "/" . $this->id . "'>";
+        else
+            $href_html = "<a href = '/objects/" . $this->table_name . "/" . $this->id . "'>";
+
         $test_properties = array("name","title");
         foreach($test_properties as $this_property) {
             if(isset($this->$this_property))
