@@ -1,66 +1,44 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## About Home Events
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This project began as a result of my analytical nature running headlong into weekly gaming group. How often do certain numbers come up on dice rolls? Does seating order have any effect on outcomes? Who really DOES win the most? The frist step to answering these questions is to gather the data! This project aims to be a quick and easy way to manage and create events, include activities, record results, and find ways to interpret the data to prove that you are #1!
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Installation
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- PHP 8.3.12
+- MySQL 5.7.36 
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+To create the appropriate tables, run 'docs/schema.sql' against your mysql installation.
+If you want to include seed data to play with, run 'seed_data.sql' to import the data.
+To build the database and populate it at the same time, run 'schema_with_seed_data.sql'.
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Structure
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+An Event (time and place with users attending) has one or more Activities (games, dice rolls, etc) associated with it. Any objects associated with a given Activity are stored in Activity Objects (ex: A specific deck name).
+For each Activity attached to an Event, we record the Event Activity Result for that user.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+## Object Control
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Each table in the database not listed in the app/define.php 'TABLESNONOBJECT' array is controlled via the Blank class (Models/Blank.php). If new tables are created, they will be able to be controlled by Blank unless added to this array.
 
-### Premium Partners
+To create an object, call: $temp_object = new Blank('<table name>');, replacing <table name> with the table holding the object definition.
+To instantiate a specific instance of a record in the database, call $temp_object->set_values_by_id(<id>);, where <id> is the primary key of the object you'd like to access.
+To do this in one step (instantiate and load), call  $temp_object = new Blank('<table name>',<id>);
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+For specific features of the Blank object type, view Models/Blank.php and play around, or leave me a message. If people want text, I'll provide it :)
 
-## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## File locations
+Here's where you can put custom stuff:
+- css                    public/css/styles.css
+- js                     public/js/base.js
+- constant definitions   app/define.php
+- custom functions       app/Helpers/Helpers.php
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### Author
+By Aaron Mathisen
