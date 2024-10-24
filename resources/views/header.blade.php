@@ -17,7 +17,7 @@
         <script type="text/javascript" src="{{ asset('js/base.js') }}"></script>
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50">
-    <a href = "/">Home</a>&nbsp;&nbsp;<a href = "/objects">Objects</a>
+    <a href = "/">Home</a>&nbsp;&nbsp;<a href = "/objects">Objects</a>&nbsp;&nbsp;<a href = "/logout">Logout</a>
     <br>
     <br>
     {{-- @include('topnav') --}}
