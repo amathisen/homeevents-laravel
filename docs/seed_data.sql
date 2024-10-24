@@ -203,7 +203,6 @@ UNLOCK TABLES;
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES ('0WXGYeutBfn9W25SWnUZFPWRtcZuwfEhmSzsLOli',NULL,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 OPR/114.0.0.0','YTozOntzOjY6Il90b2tlbiI7czo0MDoiMmJkNUh2dmFtY0NiWHNoamRiZk1MbFNYM0NtM2ZjeVB6UE1qOGxrMCI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MjU6Imh0dHA6Ly9ob21lZXZlbnRzLWxhcmF2ZWwiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19',1729649229),('wxdIWssSOX1SGY4szygWoIsOhqcIw943W3sAqkD0',NULL,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 OPR/114.0.0.0','YTozOntzOjY6Il90b2tlbiI7czo0MDoiRHdIRXZMemY5VTY5UUpHekhlYXpxaEhOc3VyN3RqdUlDdFBGOHVqbyI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6MzQ6Imh0dHA6Ly9ob21lZXZlbnRzLWxhcmF2ZWwvZXZlbnQvMTMiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX19',1729560069);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -213,7 +212,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (9,'Aaron','aaron',NULL,'aaron',NULL,NULL,NULL),(10,'Andrew','andrew',NULL,'andrew',NULL,NULL,NULL),(11,'Evan','evan',NULL,'evan',NULL,NULL,NULL),(12,'Kenyon','kenyon',NULL,'kenyon',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (9,'Aaron','aaron',NULL,'$12$oRGGepdsh5PK0MVEDiGEH..GVDiYkwr2oVNXifAKoDvqsCwlQiNVa',NULL,NULL,NULL),(10,'Andrew','andrew',NULL,'andrew',NULL,NULL,NULL),(11,'Evan','evan',NULL,'evan',NULL,NULL,NULL),(12,'Kenyon','kenyon',NULL,'kenyon',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

@@ -10,8 +10,9 @@ class AccessControlController extends Controller
 {
     public function user_login() {
         $page_title = "Home Events - Login";
+        $skip_header_links = true;
 
-        return view('login',compact("page_title"));
+        return view('login',compact("page_title","skip_header_links"));
     }
     
     public function user_login_try(Request $request) {
