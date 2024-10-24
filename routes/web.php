@@ -17,7 +17,7 @@ Route::post('/login/try', [AccessControlController::class, 'user_login_try']);
 Route::get('/logout', [AccessControlController::class, 'user_logout'])->name('logout');
 
 Route::get('/activity_object/{activity_object_id}', [ActivityObjectController::class, 'index'])->name('activity_object_details');
-Route::get('/users/{user_id}', [UsersController::class, 'index'])->name('users_details');
+Route::get('/users/{users_id}', [UsersController::class, 'index'])->name('users_details');
 Route::get('/event/{event_id}', [EventsController::class, 'index'])->name('event_details');
 
 Route::post('/objects/crud', [ObjectsController::class, 'object_crud']);

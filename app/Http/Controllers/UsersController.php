@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 
 class UsersController extends Controller
 {
-    public function index($user_id) {
-        $user = new Blank('users',$user_id);
+    public function index($users_id) {
+        $user = new Blank('users',$users_id);
         $page_title = "User - " . $user->name;
         $events = $user->get_referring_results_by_link('event_users','event');
         $results_tracker = array();
@@ -82,6 +82,6 @@ class UsersController extends Controller
             array_push($results_block,$these_results);
         }
 
-        return view('user',compact("page_title","user","events","results_block"));
+        return view('users',compact("page_title","user","events","results_block"));
     }
 }
