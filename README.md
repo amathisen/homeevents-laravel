@@ -12,6 +12,11 @@ To create the appropriate tables, run 'docs/schema.sql' against your mysql insta
 If you want to include seed data to play with, run 'seed_data.sql' to import the data.
 To build the database and populate it at the same time, run 'schema_with_seed_data.sql'.
 
+## Default login
+<pre>
+user: aaron
+password: homeevents
+</pre>
 
 ## Structure
 
