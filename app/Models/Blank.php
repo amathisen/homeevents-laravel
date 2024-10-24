@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Hash;
 
 #[AllowDynamicProperties]
 
@@ -142,9 +143,12 @@ class Blank extends Model {
             $tmp = $this->get_value($this_column['name']);
             if(!$this->validate_value($this_column['name'],$tmp,$this_column))
                 continue;
-
-            if($inserting || (!$inserting && $tmp != $this->initial_values[$this_column['name']]))
+                
+            if($inserting || (!$inserting && $tmp != $this->initial_values[$this_column['name']])) {
+                if($this_column['name'] == 'password')
+                    $tmp = Hash::make($tmp);
                 $key_vals[$this_column['name']] = $tmp;
+            }
         }
 
         if(!count($key_vals)) {
