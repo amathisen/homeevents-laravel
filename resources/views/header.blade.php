@@ -18,7 +18,11 @@
     </head>
     <body class="font-sans antialiased dark:bg-black dark:text-white/50">
     @if(Auth::id())
-    <a href = "/">Home</a>&nbsp;&nbsp;<a href = "/objects">Objects</a>&nbsp;&nbsp;<a href = "/logout">Logout</a>
+        <a href = "/">Home</a>
+        @if(user_has_role(ROLEIDS["ADMIN"]))
+            &nbsp;&nbsp;<a href = "/objects">Objects</a>&nbsp;
+        @endif
+        &nbsp;<a href = "/logout">Logout</a>
     @endif
     <br>
     <br>
