@@ -17,6 +17,12 @@ if(!defined("DATEDISPLAY"))
 if(!defined("TABLESNONOBJECT"))
     define("TABLESNONOBJECT",array("cache","cache_locks","failed_jobs","job_batches","jobs","migrations","password_reset_tokens","sessions"));
 
+if(!defined("ROLEIDS")) {
+    define("ROLEIDS",array(
+        "ADMIN" => 1)
+    );
+}
+
 if(!defined("CACHETIMEOUTS")) {
     define("CACHETIMEOUTS",array(
         "SCHEMADATA" => 6000)
