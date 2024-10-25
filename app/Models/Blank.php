@@ -122,6 +122,9 @@ class Blank extends Model {
     
     public function save($delete=false) {
 
+        if(!user_has_role(ROLEIDS["ADMIN"]))
+            return false;
+
         $table_data = get_set_cache('schema_data_' . $this->table_name,"DB::getSchemaBuilder()->getColumns('" . $this->table_name . "');",CACHETIMEOUTS["SCHEMADATA"]);
         
         if(!$table_data)

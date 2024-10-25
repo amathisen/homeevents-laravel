@@ -54,13 +54,16 @@ class EventsController extends Controller
         }
 
         $missing_users = new Blank('users');
-        if(count($users))
-            $missing_users = $missing_users->get_all(limit_by:"id NOT IN(" . implode(",",array_column($users,'id')) . ")",sort_by:"name");
-        else
-            $missing_users = $missing_users->get_all();
-
         $activities = new Blank('activity');
-        $activities = $activities->get_all();
+        
+        if(user_has_role(ROLEIDS["ADMIN"])) {
+            if(count($users))
+                $missing_users = $missing_users->get_all(limit_by:"id NOT IN(" . implode(",",array_column($users,'id')) . ")",sort_by:"name");
+            else
+                $missing_users = $missing_users->get_all();
+
+            $activities = $activities->get_all();
+        }
         
         return view('event',compact("page_title","event","users","location","activity_block","missing_users","activities","missing_results","activity_objects"));
     }
