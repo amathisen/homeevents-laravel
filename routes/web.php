@@ -5,6 +5,7 @@ use App\Http\Controllers\AccessControlController;
 use App\Http\Controllers\ActivityObjectController;
 use App\Http\Controllers\EventsController;
 use App\Http\Controllers\HomeEventsController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ObjectsController;
 use App\Http\Controllers\UsersController;
 
@@ -20,6 +21,7 @@ Route::group( ['middleware' => 'auth' ], function() {
     Route::get('/activity_object/{activity_object_id}', [ActivityObjectController::class, 'index'])->name('activity_object_details');
     Route::get('/users/{users_id}', [UsersController::class, 'index'])->name('users_details');
     Route::get('/event/{event_id}', [EventsController::class, 'index'])->name('event_details');
+    Route::get('/location/{location_id}', [LocationController::class, 'index'])->name('location_details');
     
     Route::group(['prefix' => '/objects'], function()
     {
