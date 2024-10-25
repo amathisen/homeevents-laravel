@@ -35,4 +35,9 @@
         return ($users_roles->get_all(limit_by:"users_id = " . $user_id . " AND roles_id = " . $role)) ? true : false;   
 
     }
+    
+    function get_href_by_type_and_id($obj_type,$obj_id) {
+        $tmp_obj = new Blank($obj_type,$obj_id);
+        return $tmp_obj->get_href();
+    }
 ?>
