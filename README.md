@@ -81,6 +81,10 @@ Write the values of Activity object $obj to the database by performing either an
 <pre>
 $obj->save();
 </pre>
+Delete an object's record in the database:
+<pre>
+$obj->save(delete:"DELETE");
+</pre>
 Return an Activity Result object based on the value of the 'activity_result_id' value in Activity object $obj:
 <pre>
 $obj->get_associated_result('activity_result');
