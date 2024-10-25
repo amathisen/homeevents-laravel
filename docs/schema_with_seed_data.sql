@@ -166,6 +166,7 @@ CREATE TABLE `cache` (
 
 LOCK TABLES `cache` WRITE;
 /*!40000 ALTER TABLE `cache` DISABLE KEYS */;
+INSERT INTO `cache` VALUES ('allowed_blank_tables','a:15:{i:0;s:8:\"activity\";i:1;s:15:\"activity_object\";i:2;s:24:\"activity_object_property\";i:3;s:20:\"activity_object_type\";i:4;s:15:\"activity_result\";i:7;s:5:\"event\";i:8;s:16:\"event_activities\";i:9;s:24:\"event_activities_results\";i:10;s:32:\"event_activities_results_objects\";i:11;s:11:\"event_users\";i:15;s:8:\"location\";i:17;s:5:\"notes\";i:19;s:5:\"roles\";i:21;s:5:\"users\";i:22;s:11:\"users_roles\";}',1729825280),('column_listing_activity_object','a:3:{i:0;s:2:\"id\";i:1;s:23:\"activity_object_type_id\";i:2;s:4:\"name\";}',1729825280),('column_listing_event','a:4:{i:0;s:2:\"id\";i:1;s:11:\"location_id\";i:2;s:4:\"date\";i:3;s:5:\"title\";}',1729825280),('column_listing_roles','a:3:{i:0;s:2:\"id\";i:1;s:4:\"name\";i:2;s:11:\"description\";}',1729825376),('column_listing_users','a:8:{i:0;s:2:\"id\";i:1;s:4:\"name\";i:2;s:5:\"email\";i:3;s:17:\"email_verified_at\";i:4;s:8:\"password\";i:5;s:14:\"remember_token\";i:6;s:10:\"created_at\";i:7;s:10:\"updated_at\";}',1729825280),('column_listing_users_roles','a:3:{i:0;s:2:\"id\";i:1;s:8:\"roles_id\";i:2;s:8:\"users_id\";}',1729825868),('schema_data_roles','a:3:{i:0;a:9:{s:4:\"name\";s:2:\"id\";s:9:\"type_name\";s:3:\"int\";s:4:\"type\";s:7:\"int(11)\";s:9:\"collation\";N;s:8:\"nullable\";b:0;s:7:\"default\";N;s:14:\"auto_increment\";b:1;s:7:\"comment\";N;s:10:\"generation\";N;}i:1;a:9:{s:4:\"name\";s:4:\"name\";s:9:\"type_name\";s:7:\"varchar\";s:4:\"type\";s:11:\"varchar(90)\";s:9:\"collation\";s:17:\"latin1_swedish_ci\";s:8:\"nullable\";b:1;s:7:\"default\";N;s:14:\"auto_increment\";b:0;s:7:\"comment\";N;s:10:\"generation\";N;}i:2;a:9:{s:4:\"name\";s:11:\"description\";s:9:\"type_name\";s:10:\"mediumtext\";s:4:\"type\";s:10:\"mediumtext\";s:9:\"collation\";s:17:\"latin1_swedish_ci\";s:8:\"nullable\";b:1;s:7:\"default\";N;s:14:\"auto_increment\";b:0;s:7:\"comment\";N;s:10:\"generation\";N;}}',1729825395),('schema_data_users_roles','a:3:{i:0;a:9:{s:4:\"name\";s:2:\"id\";s:9:\"type_name\";s:3:\"int\";s:4:\"type\";s:7:\"int(11)\";s:9:\"collation\";N;s:8:\"nullable\";b:0;s:7:\"default\";N;s:14:\"auto_increment\";b:1;s:7:\"comment\";N;s:10:\"generation\";N;}i:1;a:9:{s:4:\"name\";s:8:\"roles_id\";s:9:\"type_name\";s:3:\"int\";s:4:\"type\";s:7:\"int(11)\";s:9:\"collation\";N;s:8:\"nullable\";b:1;s:7:\"default\";N;s:14:\"auto_increment\";b:0;s:7:\"comment\";N;s:10:\"generation\";N;}i:2;a:9:{s:4:\"name\";s:8:\"users_id\";s:9:\"type_name\";s:3:\"int\";s:4:\"type\";s:7:\"int(11)\";s:9:\"collation\";N;s:8:\"nullable\";b:1;s:7:\"default\";N;s:14:\"auto_increment\";b:0;s:7:\"comment\";N;s:10:\"generation\";N;}}',1729825877);
 /*!40000 ALTER TABLE `cache` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -522,6 +523,31 @@ LOCK TABLES `password_reset_tokens` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(90) DEFAULT NULL,
+  `description` mediumtext,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `roles`
+--
+
+LOCK TABLES `roles` WRITE;
+/*!40000 ALTER TABLE `roles` DISABLE KEYS */;
+INSERT INTO `roles` VALUES (1,'Administrator','admins and things');
+/*!40000 ALTER TABLE `roles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `sessions`
 --
 
@@ -547,6 +573,7 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
+INSERT INTO `sessions` VALUES ('5wWakGKW3WXPeDO2Z2a9fdUOr2AlUWhmsmUC7xFg',9,'127.0.0.1','Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 OPR/114.0.0.0','YTo1OntzOjY6Il90b2tlbiI7czo0MDoiYTg1aWtiNVhyV1I2M1BkT3VIVGIwdXFldjdHS3NyZGluWUk0aUlrMCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czozMzoiaHR0cDovL2hvbWVldmVudHMtbGFyYXZlbC91c2Vycy85Ijt9czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDU6Imh0dHA6Ly9ob21lZXZlbnRzLWxhcmF2ZWwvb2JqZWN0cy91c2Vyc19yb2xlcyI7fXM6NjoiX2ZsYXNoIjthOjI6e3M6Mzoib2xkIjthOjA6e31zOjM6Im5ldyI7YTowOnt9fXM6NTA6ImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjtpOjk7fQ==',1729819879);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -577,8 +604,35 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (9,'Aaron','aaron',NULL,'$12$oRGGepdsh5PK0MVEDiGEH..GVDiYkwr2oVNXifAKoDvqsCwlQiNVa',NULL,NULL,NULL),(10,'Andrew','andrew',NULL,'andrew',NULL,NULL,NULL),(11,'Evan','evan',NULL,'evan',NULL,NULL,NULL),(12,'Kenyon','kenyon',NULL,'kenyon',NULL,NULL,NULL);
+INSERT INTO `users` VALUES (9,'Aaron','aaron',NULL,'$2y$12$0H83FcaOUPTZZqU9up9eyeZTCJFLYtLDU2eEMR65wY9Z4FAhFZ8XC',NULL,NULL,NULL),(10,'Andrew','andrew',NULL,'andrew',NULL,NULL,NULL),(11,'Evan','evan',NULL,'evan',NULL,NULL,NULL),(12,'Kenyon','kenyon',NULL,'kenyon',NULL,NULL,NULL);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users_roles`
+--
+
+DROP TABLE IF EXISTS `users_roles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users_roles` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `roles_id` int(11) DEFAULT NULL,
+  `users_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `roles_id_idx` (`roles_id`),
+  KEY `user_id_idx` (`users_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users_roles`
+--
+
+LOCK TABLES `users_roles` WRITE;
+/*!40000 ALTER TABLE `users_roles` DISABLE KEYS */;
+INSERT INTO `users_roles` VALUES (1,1,9);
+/*!40000 ALTER TABLE `users_roles` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -590,4 +644,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-22 19:11:47
+-- Dump completed on 2024-10-24 18:32:14
