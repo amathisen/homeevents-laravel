@@ -26,7 +26,7 @@
 @foreach($events as $this_event)
     <table class="block">
         <tr>
-            <td colspan="3" class="title">{!!$this_event->get_href()!!} {{$this_event->date}}</td>
+            <td colspan="3" class="title">{!!$this_event->get_href()!!} {{date_display($this_event->date);}}</td>
         </tr>
         @foreach($this_event->activity_details as $this_activity)
             <tr>

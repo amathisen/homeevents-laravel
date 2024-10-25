@@ -4,7 +4,7 @@
 @foreach($all_events as $this_event)
     <tr>
         <td>{!!$this_event->get_href();!!}</td>
-        <td>{{$this_event->date;}}</td>
+        <td>{{date_display($this_event->date);}}</td>
     </tr>
 @endforeach
 </table>

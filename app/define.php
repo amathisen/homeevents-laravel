@@ -11,6 +11,9 @@ if(!defined("MULLIGANID"))
 if(!defined("ACTIVITYOBJECTID"))
     define("ACTIVITYOBJECTID", -1);
 
+if(!defined("DATEDISPLAY"))
+    define("DATEDISPLAY", "n/j/Y");
+
 if(!defined("TABLESNONOBJECT"))
     define("TABLESNONOBJECT",array("cache","cache_locks","failed_jobs","job_batches","jobs","migrations","password_reset_tokens","sessions"));
 

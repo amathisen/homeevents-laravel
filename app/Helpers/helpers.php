@@ -13,5 +13,12 @@
         
         return Cache::store('file')->get($cache_check);
     }
+    
+    function date_display($this_date) {
+        if(!($this_date instanceof DateTime))
+            $this_date = strtotime($this_date);
+
+        return date(DATEDISPLAY,$this_date);
+    }
 
 ?>

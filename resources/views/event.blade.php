@@ -1,7 +1,7 @@
 @include('header')
 
 <center>
-<h1>{{$event->title}} - {{$event->date}}</h1>
+<h1>{{$event->title}} - {{date_display($event->date);}}</h1>
 <h2>{{$location->name}}</h2>
 <h3>@foreach($users as $this_user) {!!$this_user->get_href()!!}@endforeach</h3>
 </center>
