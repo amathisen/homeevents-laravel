@@ -26,6 +26,10 @@
     function user_has_role($role,$user_id=null) {
         if(!$user_id)
             $user_id = Auth::id();
+
+        if(!$user_id)
+            return false;
+
         $users_roles = new Blank ("users_roles");
 
         return ($users_roles->get_all(limit_by:"users_id = " . $user_id . " AND roles_id = " . $role)) ? true : false;   
