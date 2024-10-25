@@ -287,6 +287,9 @@ class Blank extends Model {
                 sscanf($column_data['type'],"varchar(%d)",$column_length);
                 array_push($validate_rules,"max:" . $column_length);
             break;
+            case 'mediumtext':
+                array_push($validate_rules,"string");
+            break;
             case 'date':
             case 'timestamp':
             case 'datetime':

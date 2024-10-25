@@ -8,7 +8,7 @@ use App\Http\Controllers\HomeEventsController;
 use App\Http\Controllers\ObjectsController;
 use App\Http\Controllers\UsersController;
 
-require_once(app_path() . '/define.php');
+
 
 Route::get('/login', [AccessControlController::class, 'user_login'])->name('login');
 Route::post('/login/try', [AccessControlController::class, 'user_login_try']);
