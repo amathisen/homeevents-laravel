@@ -22,4 +22,3 @@ yarn-error.log
 /.zed
 /.codelite
 composer.lock
-config/cache.php
