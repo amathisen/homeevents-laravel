@@ -2,6 +2,7 @@
 
     use Illuminate\Support\Facades\Cache;
     use Illuminate\Support\Facades\DB;
+    use App\Models\Blank;
     require_once(app_path() . '/define.php');
 
     function get_set_cache($cache_check,$fallback_source,$timeout=6000) {
@@ -22,4 +23,12 @@
         return date(DATEDISPLAY,$this_date);
     }
 
+    function user_has_role($role,$user_id=null) {
+        if(!$user_id)
+            $user_id = Auth::id();
+        $users_roles = new Blank ("users_roles");
+
+        return ($users_roles->get_all(limit_by:"users_id = " . $user_id . " AND roles_id = " . $role)) ? true : false;   
+
+    }
 ?>
