@@ -8,7 +8,7 @@
 <b>Games Played:</b> {{count($event_activities_results_objects)}}<br>
 <b>Average Placement:</b> {{(array_sum($results_values) / count($event_activities_results_objects))}}
 <br>
-<table>
+<table class="block">
 @foreach($scores as $key => $value)
     <tr>
         <td class="indent title">{{$key}} Place</td>
@@ -18,11 +18,11 @@
 </table>
 <br>
 @foreach($scores_opponents as $these_scores)
-<table>
+<table class="block">
     <tr>
         <td class="title" colspan="2">
         @if(isset($these_scores['title']))
-            {{$these_scores['title']}}
+            {!!$these_scores['title']!!}
         @else
             {{$activity_object->name}}
         @endif
@@ -46,13 +46,13 @@
 
 <br><hr><br>
 
-<table>
+<table class="block">
 @foreach($events as $this_event)
     <tr>
         <td>{{date_display($this_event->date);}}</td>
         <td>{!!$this_event->get_href();!!}</td>
         <td>{{$this_event->event_activities_name}}</td>
-        <td>{{$this_event->event_activities_results_result_value}}</td>
+        <td>{{$this_event->event_activities_results_result_value}} Place</td>
     </tr>
 @endforeach
 </table>
