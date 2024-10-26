@@ -179,7 +179,7 @@ class Blank extends Model {
         return null;
     }
 
-    public function get_referring_results($base_parent,$second_test=null) {
+    public function get_referring_results($base_parent,$second_test=null,$sort_by=null) {
         if(!(int)$this->id > 0)
             return null;
 
@@ -189,6 +189,8 @@ class Blank extends Model {
         $query->where($this->table_name . "_id",'=',$this->id);
         if($second_test != null && is_array($second_test) && count($second_test) == 2)
             $query->where($second_test[0],'=',$second_test[1]);
+        if($sort_by != null)
+            $query->orderBy($sort_by);
 
         $results_list = $query->get();
 
@@ -202,8 +204,8 @@ class Blank extends Model {
         return $results_array;
     }
     
-    public function get_referring_results_by_link($base_parent,$link_table,$second_test=null) {
-        $link_list = $this->get_referring_results($base_parent,$second_test);
+    public function get_referring_results_by_link($base_parent,$link_table,$second_test=null,$sort_by=null) {
+        $link_list = $this->get_referring_results($base_parent,$second_test,$sort_by);
         $results_list = array();
         foreach($link_list as $this_obj) {
             $tmp_obj = $this_obj->get_associated_result($link_table);

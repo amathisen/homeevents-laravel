@@ -12,7 +12,7 @@ class EventsController extends Controller
         $page_title = "Event - " . $event->title;
         $users = $event->get_referring_results_by_link('event_users','users');
         $location = $event->get_associated_result('location');
-        $event_activities = $event->get_referring_results('event_activities');
+        $event_activities = $event->get_referring_results('event_activities',sort_by:'name');
         $activity_block = array();
         $missing_results = array();
         $activity_objects = new Blank('activity_object');

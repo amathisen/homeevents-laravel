@@ -40,7 +40,7 @@ class ActivityObjectController extends Controller
             else
                 $scores[$event_activities_results->result_value] += 1;
         }
-        
+        ksort($scores);
         foreach($results_values_opponents as $these_results) {
             $user_results = $these_results['user_results'];
             unset($these_results['user_results']);
@@ -48,7 +48,7 @@ class ActivityObjectController extends Controller
                 $tmp_event_activities_results_obj = $this_result->get_referring_results('event_activities_results_objects')[0];
                 $tmp_activity_obj = $tmp_event_activities_results_obj->get_associated_result('activity_object');
                 if(!isset($scores_opponents[$tmp_activity_obj->id])) {
-                    $scores_opponents[$tmp_activity_obj->id]['title'] = $tmp_activity_obj->name;
+                    $scores_opponents[$tmp_activity_obj->id]['title'] = $tmp_activity_obj->get_href();
                     $scores_opponents[$tmp_activity_obj->id][$this_result->result_value] = 1;
                 } else {
                     if(!isset($scores_opponents[$tmp_activity_obj->id][$this_result->result_value]))
@@ -62,6 +62,7 @@ class ActivityObjectController extends Controller
                     $scores_opponents[$tmp_activity_obj->id . '_user'][$user_results->result_value] += 1;
                 }
                 ksort($scores_opponents[$tmp_activity_obj->id]);
+                ksort($scores_opponents[$tmp_activity_obj->id . '_user']);
             }  
         }
 

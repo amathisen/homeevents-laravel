@@ -12,7 +12,7 @@ class LocationController extends Controller
         $location = new Blank('location',$location_id);
         $page_title = $location->name;
         $events = new Blank('event');
-        $events = $events->get_all(limit_by:'location_id = ' . $location->id);
+        $events = $events->get_all(limit_by:'location_id = ' . $location->id,sort_by:'date');
         
         return view('location',compact("page_title","location","events"));
     }
