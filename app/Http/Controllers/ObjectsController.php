@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 class ObjectsController extends Controller
 {
     public function index() {
+        if(!user_has_role(ROLEIDS["ADMIN"]))
+            return redirect()->route('index');
         $page_title = "All the Things";
         $tables = get_set_cache('allowed_blank_tables',"array_diff(DB::getSchemaBuilder()->getTableListing(),TABLESNONOBJECT);",CACHETIMEOUTS["SCHEMADATA"]);
         return view('objects',compact("page_title","tables"));

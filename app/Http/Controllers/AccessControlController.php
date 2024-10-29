@@ -22,9 +22,10 @@ class AccessControlController extends Controller
         ]);
                 
         $credentials = $request->only('email', 'password');
-        if (Auth::attempt($credentials))
+        if (Auth::attempt($credentials)) {
+            remove_from_cache('user_groups_list_' . Auth::id());
             return redirect('/users/' . Auth::id());
-        else
+        } else
             return redirect()->route('login');
     }
     

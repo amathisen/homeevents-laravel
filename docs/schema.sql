@@ -27,8 +27,10 @@ CREATE TABLE `activity` (
   `name` varchar(90) DEFAULT NULL,
   `description` mediumtext,
   `activity_result_id` int(11) DEFAULT NULL,
+  `groups_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `activity_result_id_idx` (`activity_result_id`)
+  KEY `activity_result_id_idx` (`activity_result_id`),
+  KEY `groups_id_idx` (`groups_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -43,8 +45,10 @@ CREATE TABLE `activity_object` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `activity_object_type_id` int(11) DEFAULT NULL,
   `name` varchar(90) DEFAULT NULL,
+  `groups_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `activity_object_type_id_idx` (`activity_object_type_id`)
+  KEY `activity_object_type_id_idx` (`activity_object_type_id`),
+  KEY `groups_id_idx` (`groups_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -60,8 +64,10 @@ CREATE TABLE `activity_object_property` (
   `activity_object_id` int(11) DEFAULT NULL,
   `name` varchar(90) DEFAULT NULL,
   `value` varchar(90) DEFAULT NULL,
+  `groups_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `activity_object_id_idx` (`activity_object_id`)
+  KEY `activity_object_id_idx` (`activity_object_id`),
+  KEY `groups_id_idx` (`groups_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -76,8 +82,10 @@ CREATE TABLE `activity_object_type` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `activity_id` int(11) DEFAULT NULL,
   `name` varchar(90) DEFAULT NULL,
+  `groups_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `activity_id_idx` (`activity_id`)
+  KEY `activity_id_idx` (`activity_id`),
+  KEY `groups_id_idx` (`groups_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -92,7 +100,9 @@ CREATE TABLE `activity_result` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   `highest_wins` tinyint(4) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `groups_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `groups_id_idx` (`groups_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -138,8 +148,10 @@ CREATE TABLE `event` (
   `location_id` int(11) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
   `title` varchar(90) DEFAULT NULL,
+  `groups_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `location_id_idx` (`location_id`)
+  KEY `location_id_idx` (`location_id`),
+  KEY `groups_id_idx` (`groups_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -155,9 +167,11 @@ CREATE TABLE `event_activities` (
   `name` varchar(90) DEFAULT NULL,
   `event_id` int(11) DEFAULT NULL,
   `activity_id` int(11) DEFAULT NULL,
+  `groups_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `event_id_idx` (`event_id`),
-  KEY `activity_id_idx` (`activity_id`)
+  KEY `activity_id_idx` (`activity_id`),
+  KEY `groups_id_idx` (`groups_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=85 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -173,9 +187,11 @@ CREATE TABLE `event_activities_results` (
   `event_activities_id` int(11) DEFAULT NULL,
   `users_id` int(11) DEFAULT NULL,
   `result_value` varchar(45) DEFAULT NULL,
+  `groups_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `event_activities_id_idx` (`event_activities_id`),
-  KEY `user_id_idx` (`users_id`)
+  KEY `user_id_idx` (`users_id`),
+  KEY `groups_id_idx` (`groups_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=216 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -190,9 +206,11 @@ CREATE TABLE `event_activities_results_objects` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `event_activities_results_id` int(11) DEFAULT NULL,
   `activity_object_id` int(11) DEFAULT NULL,
+  `groups_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `event_activities_results_id_idx` (`event_activities_results_id`),
-  KEY `activity_object_id_idx` (`activity_object_id`)
+  KEY `activity_object_id_idx` (`activity_object_id`),
+  KEY `groups_id_idx` (`groups_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=74 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -207,9 +225,11 @@ CREATE TABLE `event_users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `event_id` int(11) DEFAULT NULL,
   `users_id` int(11) DEFAULT NULL,
+  `groups_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `event_id_idx` (`event_id`),
-  KEY `user_id_idx` (`users_id`)
+  KEY `user_id_idx` (`users_id`),
+  KEY `groups_id_idx` (`groups_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=38 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -231,6 +251,21 @@ CREATE TABLE `failed_jobs` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `failed_jobs_uuid_unique` (`uuid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `groups`
+--
+
+DROP TABLE IF EXISTS `groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `groups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(90) DEFAULT NULL,
+  `description` mediumtext,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -286,7 +321,9 @@ CREATE TABLE `location` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(90) DEFAULT NULL,
   `address` varchar(500) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `groups_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `groups_id_idx` (`groups_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -319,8 +356,10 @@ CREATE TABLE `notes` (
   `object_type` varchar(90) DEFAULT NULL,
   `object_identifier` int(11) DEFAULT NULL,
   `note_text` mediumtext,
+  `groups_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `user_id_idx` (`users_id`)
+  KEY `user_id_idx` (`users_id`),
+  KEY `groups_id_idx` (`groups_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -350,8 +389,27 @@ CREATE TABLE `roles` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(90) DEFAULT NULL,
   `description` mediumtext,
-  PRIMARY KEY (`id`)
+  `groups_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `groups_id_idx` (`groups_id`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `roles_groups`
+--
+
+DROP TABLE IF EXISTS `roles_groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `roles_groups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(90) DEFAULT NULL,
+  `description` mediumtext,
+  `groups_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `groups_id_idx` (`groups_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -396,6 +454,25 @@ CREATE TABLE `users` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `users_groups`
+--
+
+DROP TABLE IF EXISTS `users_groups`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users_groups` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `groups_id` int(11) DEFAULT NULL,
+  `users_id` int(11) DEFAULT NULL,
+  `roles_groups_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `groups_id_idx` (`groups_id`),
+  KEY `users_id_idx` (`users_id`),
+  KEY `roles_groups_idx` (`roles_groups_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `users_roles`
 --
 
@@ -421,4 +498,4 @@ CREATE TABLE `users_roles` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-24 18:32:48
+-- Dump completed on 2024-10-28 19:33:34

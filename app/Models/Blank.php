@@ -40,7 +40,10 @@ class Blank extends Model {
            return true;
         }
         
-        $db_obj = DB::table($this->table_name)->find((int)$base_id);
+        if(!in_array($this->table_name,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
+            $db_obj = DB::table($this->table_name)->where(function ($query) { $query->whereIn('groups_id',get_user_groups_id_list())->orWhereNull('groups_id'); })->find((int)$base_id);
+        else
+            $db_obj = DB::table($this->table_name)->find((int)$base_id);
 
         if(isset($db_obj->id) && (int)$db_obj->id === $base_id) {
             foreach($db_obj as $key => $value) {
@@ -48,8 +51,11 @@ class Blank extends Model {
                 $this->initial_values[$key] = $value;
             }
             return true;
-        } else
+        } else {
+            $this->table_name = null;
             $this->id = null;
+            return false;
+        }
         
         return false;
     }
@@ -74,7 +80,10 @@ class Blank extends Model {
             $query->whereRaw($limit_by);
         if($sort_by != null)
             $query->orderBy($sort_by);
-        
+
+        if(!in_array($this->table_name,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
+            $query->where(function ($query) { $query->whereIn('groups_id',get_user_groups_id_list())->orWhereNull('groups_id'); });
+
         $object_ids = $query->get();
 
         foreach($object_ids as $this_id) {
@@ -192,6 +201,9 @@ class Blank extends Model {
         if($sort_by != null)
             $query->orderBy($sort_by);
 
+        if(!in_array($base_parent,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
+            $query->where(function ($query) { $query->whereIn('groups_id',get_user_groups_id_list())->orWhereNull('groups_id'); });
+
         $results_list = $query->get();
 
         foreach($results_list as $this_result) {
@@ -209,7 +221,8 @@ class Blank extends Model {
         $results_list = array();
         foreach($link_list as $this_obj) {
             $tmp_obj = $this_obj->get_associated_result($link_table);
-            array_push($results_list,$tmp_obj);
+            if($tmp_obj)
+                array_push($results_list,$tmp_obj);
         }
         
         return $results_list;
