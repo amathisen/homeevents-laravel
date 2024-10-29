@@ -155,7 +155,10 @@ class Blank extends Model {
             $tmp = $this->get_value($this_column['name']);
             if(!$this->validate_value($this_column['name'],$tmp,$this_column))
                 continue;
-                
+
+            if($this_column['type_name'] == "int" && $tmp == "")
+                $tmp = null;
+
             if($inserting || (!$inserting && $tmp != $this->initial_values[$this_column['name']])) {
                 if($this_column['name'] == 'password')
                     $tmp = Hash::make($tmp);
@@ -251,6 +254,8 @@ class Blank extends Model {
             $all_the_things = $all_the_things->get_all();
             $test_cols = array("name","title","event_activities_id");
  
+            $html_string[1] .= "<option value=''>-- Nothing Selected --</option>";
+            
             foreach($all_the_things as $this_thing) {
                 $html_string[1] .= "<option value='" . $this_thing->id . "'";
                 foreach($test_cols as $this_col) {
