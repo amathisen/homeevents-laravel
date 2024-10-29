@@ -12,6 +12,8 @@ class GroupsController extends Controller
         $page_title = "Group - " . $group->name;
 
         $users_groups = get_all_blank('users_groups',limit_by:'groups_id = ' . $group->id,sort_by:'users_id,roles_groups_id');
-        return view('groups',compact("page_title","group","users_groups"));
+        $events = get_all_blank('event',limit_by:'groups_id = ' . $group->id,sort_by:'date');
+
+        return view('groups',compact("page_title","group","users_groups","events"));
     }
 }
