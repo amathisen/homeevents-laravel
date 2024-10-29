@@ -32,6 +32,7 @@
             <input type="hidden" name="object_type" value="event_users">
             <input type="hidden" name="event_id" value="{{$event->id}}">
             <input type="hidden" name="redirect_to" value="/event/{{$event->id}}">
+            <input type="hidden" name="groups_id" value="{{$event->groups_id}}">
             <select name="users_id" id="users_id">
                 @foreach($missing_users as $this_user)
                     <option value="{{$this_user->id}}">{{$this_user->name}}</option>
@@ -51,6 +52,7 @@
             <input type="hidden" name="object_type" value="event_activities">
             <input type="hidden" name="event_id" value="{{$event->id}}">
             <input type="hidden" name="redirect_to" value="/event/{{$event->id}}">
+            <input type="hidden" name="groups_id" value="{{$event->groups_id}}">
             <input type="text" name="name" id="name">
             <select name="activity_id" id="activity_id">
                 @foreach($activities as $this_activity)
@@ -83,9 +85,11 @@
                         <input type="hidden" name="event_activities_id" value="{{$this_result['event_activities_id']}}">
                         <input type="hidden" name="users_id" value="{{$this_result['users_id']}}">
                         <input type="hidden" name="redirect_to" value="/event/{{$event->id}}">
+                        <input type="hidden" name="groups_id" value="{{$event->groups_id}}">
                         @if(isset($this_result['activity_object_type_id']))
                             <input type="hidden" name="RECURSIVE_PREVIOUSIDTOFIELD" value="event_activities_results_id">
                             <input type="hidden" name="RECURSIVE_OBJECTTYPE" value="event_activities_results_objects">
+                            <input type="hidden" name="RECURSIVE_groups_id" value="{{$event->groups_id}}">
                             <select name="RECURSIVE_activity_object_id" id="RECURSIVE_activity_object_id">
                                 @foreach($activity_objects as $this_activity_object)
                                     @if($this_result['activity_object_type_id'] == $this_activity_object->activity_object_type_id)
