@@ -250,8 +250,7 @@ class Blank extends Model {
                 $html_string[1] .= " disabled";
             $html_string[1] .= ">";
             $base_name = substr($field_name, 0, -3);
-            $all_the_things = new Blank($base_name);
-            $all_the_things = $all_the_things->get_all();
+            $all_the_things = get_all_blank($base_name);
             $test_cols = array("name","title","event_activities_id");
  
             $html_string[1] .= "<option value=''>-- Nothing Selected --</option>";

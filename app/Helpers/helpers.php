@@ -74,6 +74,13 @@
         return in_array($group_id,$groups_array);
     }
 
+    function get_all_blank($table_name,$limit_by=null,$sort_by=null) {
+        $tmp_obj = new Blank($table_name);
+        $tmp_obj = $tmp_obj->get_all(limit_by:$limit_by,sort_by:$sort_by);
+            
+        return $tmp_obj;
+    }
+    
     function get_href_by_type_and_id($obj_type,$obj_id) {
         $tmp_obj = new Blank($obj_type,$obj_id);
         return $tmp_obj->get_href();

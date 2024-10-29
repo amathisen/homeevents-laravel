@@ -26,8 +26,7 @@ class ActivityObjectController extends Controller
             $user = new Blank('users',$event_activities_results->users_id);
             $event->event_activities_name = $event_activities->name;
             $event->event_activities_results_result_value = $event_activities_results->result_value;
-            $opponents_results = new Blank('event_activities_results');
-            $opponents_results = $opponents_results->get_all(limit_by:'event_activities_id = ' . $event_activities->id . ' AND users_id != ' . $event_activities_results->users_id);
+            $opponents_results = get_all_blank(table_name:'event_activities_results',limit_by:'event_activities_id = ' . $event_activities->id . ' AND users_id != ' . $event_activities_results->users_id);
             array_push($events,$event);
             array_push($results_values,$event_activities_results->result_value);
             $opponents_results['user_results'] = $event_activities_results;

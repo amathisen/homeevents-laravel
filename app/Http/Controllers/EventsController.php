@@ -15,8 +15,7 @@ class EventsController extends Controller
         $event_activities = $event->get_referring_results('event_activities',sort_by:'name');
         $activity_block = array();
         $missing_results = array();
-        $activity_objects = new Blank('activity_object');
-        $activity_objects = $activity_objects->get_all(sort_by:'name');
+        $activity_objects = get_all_blank('activity_object',sort_by:'name');
         
         foreach($event_activities as $this_activity) {
             $activity = $this_activity->get_associated_result('activity');
