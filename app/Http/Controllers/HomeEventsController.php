@@ -12,7 +12,9 @@ class HomeEventsController extends Controller
         $all_events = get_all_blank(table_name:'event',sort_by:"date");
         $all_users = get_all_blank(table_name:'users',sort_by:"name");
         $all_activity_objects = get_all_blank(table_name:'activity_object',sort_by:"name");
+        $all_groups = get_all_blank(table_name:'groups',sort_by:"name");
         
-        return view('index',compact("page_title","all_events","all_users","all_activity_objects"));
+        $blocks = array($all_groups,$all_users,$all_activity_objects);
+        return view('index',compact("page_title","all_events","blocks"));
     }
 }

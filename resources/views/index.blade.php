@@ -10,24 +10,15 @@
 @endforeach
 </table>
 
-<hr><br>
-
-<table>
-@foreach($all_users as $this_user)
-    <tr>
-        <td>{!!$this_user->get_href();!!}</td>
-    </tr>
+@foreach($blocks as $this_block)
+    <hr><br>
+    <table>
+    @foreach($this_block as $this_element)
+        <tr>
+            <td>{!!$this_element->get_href();!!}</td>
+        </tr>
+    @endforeach
+    </table>
 @endforeach
-</table>
-
-<hr><br />
-        
-<table>
-@foreach($all_activity_objects as $this_activity_object)
-    <tr>
-        <td>{!!$this_activity_object->get_href();!!}</td>
-    </tr>
-@endforeach
-</table>
 
 @include('footer')
