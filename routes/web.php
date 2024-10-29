@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccessControlController;
 use App\Http\Controllers\ActivityObjectController;
 use App\Http\Controllers\EventsController;
+use App\Http\Controllers\GroupsController;
 use App\Http\Controllers\HomeEventsController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ObjectsController;
@@ -22,6 +23,7 @@ Route::group( ['middleware' => 'auth' ], function() {
     Route::get('/users/{users_id}', [UsersController::class, 'index'])->name('users_details');
     Route::get('/event/{event_id}', [EventsController::class, 'index'])->name('event_details');
     Route::get('/location/{location_id}', [LocationController::class, 'index'])->name('location_details');
+    Route::get('/groups/{groups_id}', [GroupsController::class, 'index'])->name('group_details');
     
     Route::group(['prefix' => '/objects'], function()
     {
