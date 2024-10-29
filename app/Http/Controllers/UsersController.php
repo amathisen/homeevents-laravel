@@ -11,6 +11,8 @@ class UsersController extends Controller
         $user = new Blank('users',$users_id);
         $page_title = "User - " . $user->name;
         $events = $user->get_referring_results_by_link('event_users','event');
+        $users_groups = get_all_blank('users_groups',limit_by:'users_id = ' . $user->id,sort_by:'groups_id,roles_groups_id');
+        $users_roles = get_all_blank('users_roles',limit_by:'users_id = ' . $user->id);
         $results_tracker = array();
         $results_objects_tracker = array();
         $results_block = array();
@@ -82,6 +84,6 @@ class UsersController extends Controller
             array_push($results_block,$these_results);
         }
 
-        return view('users',compact("page_title","user","events","results_block"));
+        return view('users',compact("page_title","user","events","results_block","users_groups","users_roles"));
     }
 }

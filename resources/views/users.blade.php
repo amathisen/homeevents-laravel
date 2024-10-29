@@ -1,6 +1,26 @@
 @include('header') 
 
-<center><h1>{{$user->name}}</h1></center>
+<center>
+<h1>{{$user->name}}</h1>
+<h2>
+@foreach($users_roles as $this_role)
+    {{$this_role->get_fk_values('roles_id',array('name'))['name']}}<br>
+@endforeach
+</h2>
+</center>
+<br>
+<table class="block">
+    <tr>
+        <td class="title">Group</td>
+        <td class="title">Role</td>
+    </tr>
+@foreach($users_groups as $this_group)
+    <tr>
+        <td>{!!get_href_by_type_and_id('groups',$this_group->groups_id);!!}</td>
+        <td>{{$this_group->get_fk_values('roles_groups_id',array('name'))['name']}}</td>
+    </tr>
+@endforeach
+</table>
 <br>
 <b>Events Attended:</b> {{count($events);}}
 <br>
