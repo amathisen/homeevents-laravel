@@ -42,6 +42,8 @@ class Blank extends Model {
         
         if(!in_array($this->table_name,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
             $db_obj = DB::table($this->table_name)->where(function ($query) { $query->whereIn('groups_id',get_user_groups_id_list())->orWhereNull('groups_id'); })->find((int)$base_id);
+        elseif($this->table_name == 'groups' && !user_has_role(ROLEIDS["ADMIN"]))
+            $db_obj = DB::table($this->table_name)->where(function ($query) { $query->whereIn('id',get_user_groups_id_list()); })->find((int)$base_id);
         else
             $db_obj = DB::table($this->table_name)->find((int)$base_id);
 
@@ -79,7 +81,7 @@ class Blank extends Model {
         if($limit_by != null)
             $query->whereRaw($limit_by);
         if($sort_by != null)
-            $query->orderBy($sort_by);
+            $query->orderByRaw($sort_by);
 
         if(!in_array($this->table_name,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
             $query->where(function ($query) { $query->whereIn('groups_id',get_user_groups_id_list())->orWhereNull('groups_id'); });
@@ -202,7 +204,7 @@ class Blank extends Model {
         if($second_test != null && is_array($second_test) && count($second_test) == 2)
             $query->where($second_test[0],'=',$second_test[1]);
         if($sort_by != null)
-            $query->orderBy($sort_by);
+            $query->orderByRaw($sort_by);
 
         if(!in_array($base_parent,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
             $query->where(function ($query) { $query->whereIn('groups_id',get_user_groups_id_list())->orWhereNull('groups_id'); });
