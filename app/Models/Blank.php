@@ -42,7 +42,7 @@ class Blank extends Model {
                 $query->join($associated_table,$this->table_name . "." . $this_field,'=',$associated_table . '.id');
                 $schema_join = get_set_cache('column_listing_' . $associated_table,"DB::getSchemaBuilder()->getColumnListing('" . $associated_table . "');",CACHETIMEOUTS["SCHEMADATA"]);
                 foreach($schema_join as $this_field_join) {
-                    $this->set_value($associated_table . '.' . $this_field_join,null);
+                    $this->set_value('ASSOC_' . $associated_table . '_' . $this_field_join,null);
                     $query->addSelect($associated_table . '.' . $this_field_join . ' AS ASSOC_' . $associated_table . '_' . $this_field_join);
                 }
             }
