@@ -238,7 +238,8 @@ class Blank extends Model {
         $html_string = array($field_name);
         
         if(!str_ends_with($field_name,"_id")) {
-            $html_string[1] = "<input type='text' name='" . $field_name . "' id='" . $field_name . "'";
+            ($field_name == "password") ? $field_type = 'password' : $field_type = 'text';
+            $html_string[1] = "<input type='" . $field_type . "' name='" . $field_name . "' id='" . $field_name . "'";
             if(isset($this->$field_name))
                 $html_string[1] .= " value='" . str_replace("'","&#39;",$this->$field_name) . "'";
             if($editable != true || $field_name == "id")
