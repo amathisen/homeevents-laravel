@@ -39,11 +39,11 @@ class Blank extends Model {
            }
            return true;
         }
-        
+
         if(!in_array($this->table_name,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
-            $db_obj = DB::table($this->table_name)->where(function ($query) { $query->whereIn('groups_id',get_user_groups_id_list())->orWhereNull('groups_id'); })->find((int)$base_id);
+            $db_obj = DB::table($this->table_name)->where(function ($query) { $query->whereIn('groups_id',session('user_groups_list'))->orWhereNull('groups_id'); })->find((int)$base_id);
         elseif($this->table_name == 'groups' && !user_has_role(ROLEIDS["ADMIN"]))
-            $db_obj = DB::table($this->table_name)->where(function ($query) { $query->whereIn('id',get_user_groups_id_list()); })->find((int)$base_id);
+            $db_obj = DB::table($this->table_name)->where(function ($query) { $query->whereIn('id',session('user_groups_list')); })->find((int)$base_id);
         else
             $db_obj = DB::table($this->table_name)->find((int)$base_id);
 
@@ -84,7 +84,7 @@ class Blank extends Model {
             $query->orderByRaw($sort_by);
 
         if(!in_array($this->table_name,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
-            $query->where(function ($query) { $query->whereIn('groups_id',get_user_groups_id_list())->orWhereNull('groups_id'); });
+            $query->where(function ($query) { $query->whereIn('groups_id',session('user_groups_list'))->orWhereNull('groups_id'); });
 
         $object_ids = $query->get();
 
@@ -207,7 +207,7 @@ class Blank extends Model {
             $query->orderByRaw($sort_by);
 
         if(!in_array($base_parent,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
-            $query->where(function ($query) { $query->whereIn('groups_id',get_user_groups_id_list())->orWhereNull('groups_id'); });
+            $query->where(function ($query) { $query->whereIn('groups_id',session('user_groups_list'))->orWhereNull('groups_id'); });
 
         $results_list = $query->get();
 

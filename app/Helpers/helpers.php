@@ -55,24 +55,6 @@
         return ($users_roles->get_all(limit_by:"users_id = " . $users_id . " AND roles_groups_id = " . $roles_groups_id . " AND groups_id = " . $groups_id)) ? true : false;   
 
     }
-    
-    function get_user_groups_id_list($user_id=null) {
-        if(!user_has_role(ROLEIDS["ADMIN"]) || !$user_id)
-            $user_id = Auth::id();
-
-        $groups_ids = get_set_cache('user_groups_list_' . $user_id,"DB::table('users_groups')->select('groups_id')->where('users_id','=',$user_id)->distinct()->get()->pluck('groups_id')->toArray();",CACHETIMEOUTS["USERGROUPIDLIST"]);
-
-        return $groups_ids;
-    }
-
-    function user_in_group($group_id,$user_id=null) {
-        if(!user_has_role(ROLEIDS["ADMIN"]) || !$user_id)
-            $user_id = Auth::id();
-
-        $groups_array = get_user_groups_id_list($user_id);
-
-        return in_array($group_id,$groups_array);
-    }
 
     function get_all_blank($table_name,$limit_by=null,$sort_by=null) {
         $tmp_obj = new Blank($table_name);

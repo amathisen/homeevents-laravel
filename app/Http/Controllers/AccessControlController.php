@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Blank;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class AccessControlController extends Controller
@@ -23,7 +24,8 @@ class AccessControlController extends Controller
                 
         $credentials = $request->only('email', 'password');
         if (Auth::attempt($credentials)) {
-            remove_from_cache('user_groups_list_' . Auth::id());
+            $groups_ids = DB::table('users_groups')->select('groups_id')->where('users_id','=',Auth::id())->distinct()->get()->pluck('groups_id')->toArray();
+            session(['user_groups_list' => $groups_ids]);
             return redirect('/users/' . Auth::id());
         } else
             return redirect()->route('login');
