@@ -11,7 +11,6 @@ class EventsController extends Controller
         $event = new Blank('event',$event_id);
         $page_title = "Event - " . $event->title;
         $users = $event->get_referring_results_by_link('event_users','users');
-        $location = $event->get_associated_result('location');
         $event_activities = $event->get_referring_results('event_activities',sort_by:'name');
         $activity_block = array();
         $missing_results = array();
@@ -64,6 +63,6 @@ class EventsController extends Controller
             $activities = $activities->get_all();
         }
         
-        return view('event',compact("page_title","event","users","location","activity_block","missing_users","activities","missing_results","activity_objects"));
+        return view('event',compact("page_title","event","users","activity_block","missing_users","activities","missing_results","activity_objects"));
     }
 }
