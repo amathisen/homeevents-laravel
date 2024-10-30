@@ -15,14 +15,14 @@ class Blank extends Model {
     private $initial_values = array();
 
     // Constructor to create a blank object. Pass in an ID to populate values for the matching id row in the DB
-    public function __construct($initial_table = null,$initial_id = null) {
+    public function __construct($initial_table = null,$initial_id = null,$include_associated=false) {
             $this->table_name = trim(strtolower($initial_table));
             $this->id = (int)$initial_id;
-            return $this->set_values_by_id((int)$initial_id);
+            return $this->set_values_by_id((int)$initial_id,$include_associated);
     }
     
     //Pass in an id to populate values for this object with the matching row in the DB
-    public function set_values_by_id($base_id) {
+    public function set_values_by_id($base_id,$include_associated=false) {
         
         $tables = get_set_cache('allowed_blank_tables',"array_diff(DB::getSchemaBuilder()->getTableListing(),TABLESNONOBJECT);",CACHETIMEOUTS["SCHEMADATA"]);
         if(!in_array($this->table_name,$tables)) {
@@ -31,22 +31,33 @@ class Blank extends Model {
             return false;
         }
 
-        if($base_id == null || !is_int($base_id) || (int)$base_id < 0) {
-            $schema = get_set_cache('column_listing_' . $this->table_name,"DB::getSchemaBuilder()->getColumnListing('" . $this->table_name . "');",CACHETIMEOUTS["SCHEMADATA"]);
+        $schema = get_set_cache('column_listing_' . $this->table_name,"DB::getSchemaBuilder()->getColumnListing('" . $this->table_name . "');",CACHETIMEOUTS["SCHEMADATA"]);
+        $query = DB::table($this->table_name);
 
-           foreach($schema as $this_field) {
-               $this->set_value($this_field,null);
-           }
-           return true;
+        foreach($schema as $this_field) {
+            $this->set_value($this_field,null);
+            $query->addSelect($this->table_name . '.' . $this_field . ' AS ' . $this_field);
+            if($include_associated && str_ends_with($this_field,"_id")) {
+                $associated_table = substr($this_field,0,-3);
+                $query->join($associated_table,$this->table_name . "." . $this_field,'=',$associated_table . '.id');
+                $schema_join = get_set_cache('column_listing_' . $associated_table,"DB::getSchemaBuilder()->getColumnListing('" . $associated_table . "');",CACHETIMEOUTS["SCHEMADATA"]);
+                foreach($schema_join as $this_field_join) {
+                    $this->set_value($associated_table . '.' . $this_field_join,null);
+                    $query->addSelect($associated_table . '.' . $this_field_join . ' AS ASSOC_' . $associated_table . '_' . $this_field_join);
+                }
+            }
         }
+        
+        if($base_id == null || !is_int($base_id) || (int)$base_id < 0)
+            return true;
 
+        $query->where($this->table_name . '.id','=',(int)$base_id);
         if(!in_array($this->table_name,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
-            $db_obj = DB::table($this->table_name)->where(function ($query) { $query->whereIn('groups_id',session('user_groups_list'))->orWhereNull('groups_id'); })->find((int)$base_id);
+            $query->where(function ($query) { $query->whereIn($this->table_name . '.' . 'groups_id',session('user_groups_list'))->orWhereNull($this->table_name . '.' . 'groups_id'); });
         elseif($this->table_name == 'groups' && !user_has_role(ROLEIDS["ADMIN"]))
-            $db_obj = DB::table($this->table_name)->where(function ($query) { $query->whereIn('id',session('user_groups_list')); })->find((int)$base_id);
-        else
-            $db_obj = DB::table($this->table_name)->find((int)$base_id);
+            $query->where(function ($query) { $query->whereIn($this->table_name . '.' . 'id',session('user_groups_list')); });
 
+        $db_obj = $query->first();
         if(isset($db_obj->id) && (int)$db_obj->id === $base_id) {
             foreach($db_obj as $key => $value) {
                 $this->$key = $value;
@@ -69,7 +80,7 @@ class Blank extends Model {
         return false;
     }
     
-    public function get_all($limit_by=null,$sort_by=null) {
+    public function get_all($limit_by=null,$sort_by=null,$include_associated=false) {
         if($this->table_name == null)
             return false;
 
@@ -89,7 +100,7 @@ class Blank extends Model {
         $object_ids = $query->get();
 
         foreach($object_ids as $this_id) {
-            $tmp = new Blank($this->table_name,$this_id->id);
+            $tmp = new Blank($this->table_name,$this_id->id,$include_associated);
             if($tmp->id == $this_id->id)  {
                 array_push($all_objects,$tmp);
             }
@@ -224,6 +235,7 @@ class Blank extends Model {
     public function get_referring_results_by_link($base_parent,$link_table,$second_test=null,$sort_by=null) {
         $link_list = $this->get_referring_results($base_parent,$second_test,$sort_by);
         $results_list = array();
+            
         foreach($link_list as $this_obj) {
             $tmp_obj = $this_obj->get_associated_result($link_table);
             if($tmp_obj)
