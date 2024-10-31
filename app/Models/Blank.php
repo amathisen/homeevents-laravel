@@ -42,8 +42,8 @@ class Blank extends Model {
                 $query->join($associated_table,$this->table_name . "." . $this_field,'=',$associated_table . '.id');
                 $schema_join = get_set_cache('column_listing_' . $associated_table,"DB::getSchemaBuilder()->getColumnListing('" . $associated_table . "');",CACHETIMEOUTS["SCHEMADATA"]);
                 foreach($schema_join as $this_field_join) {
-                    $this->set_value('ASSOC_' . $associated_table . '_' . $this_field_join,null);
-                    $query->addSelect($associated_table . '.' . $this_field_join . ' AS ASSOC_' . $associated_table . '_' . $this_field_join);
+                    $this->set_value('ASSOC^' . $associated_table . '^' . $this_field_join,null);
+                    $query->addSelect($associated_table . '.' . $this_field_join . ' AS ASSOC^' . $associated_table . '^' . $this_field_join);
                     if(!in_array($associated_table,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
                         $query->where(function ($query) { $query->whereIn($associated_table . '.' . 'groups_id',session('user_groups_list'))->orWhereNull($associated_table . '.' . 'groups_id'); });
                     elseif($this->table_name == 'groups' && !user_has_role(ROLEIDS["ADMIN"]))
