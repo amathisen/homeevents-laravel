@@ -63,6 +63,16 @@
         return $tmp_obj;
     }
     
+    function get_value_by_type_and_id($obj_type,$obj_id,$fields) {
+        $tmp_obj = new Blank($obj_type,$obj_id);
+        $results = array();
+        foreach(explode(",",$fields) as $this_field) {
+            $results[$this_field] = $tmp_obj->get_value($this_field);
+        }
+    
+        return $results;
+    }
+
     function get_href_by_type_and_id($obj_type,$obj_id) {
         $tmp_obj = new Blank($obj_type,$obj_id);
         return $tmp_obj->get_href();
