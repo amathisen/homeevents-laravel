@@ -84,6 +84,14 @@ class Blank extends Model {
         return false;
     }
     
+    public function get_assoc_value($assoc_table,$assoc_field) {
+        $test_field = 'ASSOC^' . $assoc_table . '^' . $assoc_field;
+        if(isset($this->$test_field))
+            return $this->$test_field;
+
+        return false;
+    }
+
     public function get_all($limit_by=null,$sort_by=null,$include_associated=false) {
         if($this->table_name == null)
             return false;
