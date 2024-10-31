@@ -3,25 +3,27 @@
 <center>
 <h1>{{$user->name}}</h1>
 <h2>
-@foreach($users_roles as $this_role)
-    {{$this_role->get_fk_values('roles_id',array('name'))['name']}}<br>
+@foreach($user->get_ref_values('users_roles') as $this_role)
+    {{get_value_by_type_and_id('roles',$this_role['roles_id'],'name')['name']}}
 @endforeach
 </h2>
 </center>
 <br>
+
 <table class="block">
     <tr>
         <td class="title">Group</td>
         <td class="title">Role</td>
     </tr>
-@foreach($users_groups as $this_group)
+@foreach($user->get_ref_values('users_groups') as $this_group)
     <tr>
-        <td>{!!get_href_by_type_and_id('groups',$this_group->groups_id);!!}</td>
-        <td>{{$this_group->get_fk_values('roles_groups_id',array('name'))['name']}}</td>
+        <td>{!!get_href_by_type_and_id('groups',$this_group['groups_id']);!!}</td>
+        <td>{{get_value_by_type_and_id('roles_groups',$this_group['roles_groups_id'],'name')['name']}}</td>
     </tr>
 @endforeach
 </table>
 <br>
+
 <b>Events Attended:</b> {{count($events);}}
 <br>
 <br>
@@ -43,6 +45,7 @@
     <br><hr><br>
 @endforeach
 <br>
+
 @foreach($events as $this_event)
     <table class="block">
         <tr>

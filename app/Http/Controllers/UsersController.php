@@ -8,15 +8,13 @@ use Illuminate\Http\Request;
 class UsersController extends Controller
 {
     public function index($users_id) {
-        $user = new Blank('users',$users_id);
+        $user = new Blank('users',$users_id,include_referrals:'users_groups,users_roles',sort_by:'users_groups.groups_id,users_groups.roles_groups_id');
         $page_title = "User - " . $user->name;
         $events = $user->get_referring_results_by_link('event_users','event');
-        $users_groups = get_all_blank('users_groups',limit_by:'users_id = ' . $user->id,sort_by:'groups_id,roles_groups_id');
-        $users_roles = get_all_blank('users_roles',limit_by:'users_id = ' . $user->id);
         $results_tracker = array();
         $results_objects_tracker = array();
         $results_block = array();
-
+        
         foreach($events as $this_event) {
             $event_activities = $this_event->get_referring_results('event_activities');
             $this_event->activity_details = array();
@@ -84,6 +82,6 @@ class UsersController extends Controller
             array_push($results_block,$these_results);
         }
 
-        return view('users',compact("page_title","user","events","results_block","users_groups","users_roles"));
+        return view('users',compact("page_title","user","events","results_block"));
     }
 }
