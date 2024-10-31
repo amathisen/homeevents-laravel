@@ -17,14 +17,14 @@ class Blank extends Model {
     private $referring_results = array();
 
     // Constructor to create a blank object. Pass in an ID to populate values for the matching id row in the DB
-    public function __construct($initial_table = null,$initial_id = null,$include_associated=false,$include_referrals=false) {
+    public function __construct($initial_table = null,$initial_id = null,$include_associated=false,$include_referrals=false,$sort_by=null) {
             $this->table_name = trim(strtolower($initial_table));
             $this->id = (int)$initial_id;
-            return $this->set_values_by_id((int)$initial_id,$include_associated,$include_referrals);
+            return $this->set_values_by_id((int)$initial_id,$include_associated,$include_referrals,$sort_by);
     }
     
     //Pass in an id to populate values for this object with the matching row in the DB
-    public function set_values_by_id($base_id,$include_associated=false,$include_referrals=false) {
+    public function set_values_by_id($base_id,$include_associated=false,$include_referrals=false,$sort_by=false) {
         
         $tables = get_set_cache('allowed_blank_tables',"array_diff(DB::getSchemaBuilder()->getTableListing(),TABLESNONOBJECT);",CACHETIMEOUTS["SCHEMADATA"]);
         if(!in_array($this->table_name,$tables)) {
@@ -78,6 +78,9 @@ class Blank extends Model {
 
         if($base_id == null || !is_int($base_id) || (int)$base_id < 0)
             return true;
+
+        if($sort_by)
+            $query->orderByRaw($sort_by);
 
         if($include_referrals) {
             $db_objs = $query->get();
