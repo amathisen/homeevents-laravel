@@ -16,7 +16,7 @@ class UsersController extends Controller
         $results_tracker = array();
         $results_objects_tracker = array();
         $results_block = array();
-        
+
         foreach($events as $this_event) {
             $event_activities = $this_event->get_referring_results('event_activities');
             $this_event->activity_details = array();

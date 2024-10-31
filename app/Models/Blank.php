@@ -13,16 +13,18 @@ class Blank extends Model {
     public $id = null;
     private $table_name = null;
     private $initial_values = array();
+    private $associated_results = array();
+    private $referring_results = array();
 
     // Constructor to create a blank object. Pass in an ID to populate values for the matching id row in the DB
-    public function __construct($initial_table = null,$initial_id = null,$include_associated=false) {
+    public function __construct($initial_table = null,$initial_id = null,$include_associated=false,$include_referrals=false) {
             $this->table_name = trim(strtolower($initial_table));
             $this->id = (int)$initial_id;
-            return $this->set_values_by_id((int)$initial_id,$include_associated);
+            return $this->set_values_by_id((int)$initial_id,$include_associated,$include_referrals);
     }
     
     //Pass in an id to populate values for this object with the matching row in the DB
-    public function set_values_by_id($base_id,$include_associated=false) {
+    public function set_values_by_id($base_id,$include_associated=false,$include_referrals=false) {
         
         $tables = get_set_cache('allowed_blank_tables',"array_diff(DB::getSchemaBuilder()->getTableListing(),TABLESNONOBJECT);",CACHETIMEOUTS["SCHEMADATA"]);
         if(!in_array($this->table_name,$tables)) {
@@ -34,6 +36,12 @@ class Blank extends Model {
         $schema = get_set_cache('column_listing_' . $this->table_name,"DB::getSchemaBuilder()->getColumnListing('" . $this->table_name . "');",CACHETIMEOUTS["SCHEMADATA"]);
         $query = DB::table($this->table_name);
 
+        $query->where($this->table_name . '.id','=',(int)$base_id);
+        if(!in_array($this->table_name,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
+            $query->where(function ($query) { $query->whereIn($this->table_name . '.' . 'groups_id',session('user_groups_list'))->orWhereNull($this->table_name . '.' . 'groups_id'); });
+        elseif($this->table_name == 'groups' && !user_has_role(ROLEIDS["ADMIN"]))
+            $query->where(function ($query) { $query->whereIn($this->table_name . '.' . 'id',session('user_groups_list')); });
+
         foreach($schema as $this_field) {
             $this->set_value($this_field,null);
             $query->addSelect($this->table_name . '.' . $this_field . ' AS ' . $this_field);
@@ -42,30 +50,60 @@ class Blank extends Model {
                 $query->join($associated_table,$this->table_name . "." . $this_field,'=',$associated_table . '.id');
                 $schema_join = get_set_cache('column_listing_' . $associated_table,"DB::getSchemaBuilder()->getColumnListing('" . $associated_table . "');",CACHETIMEOUTS["SCHEMADATA"]);
                 foreach($schema_join as $this_field_join) {
-                    $this->set_value('ASSOC^' . $associated_table . '^' . $this_field_join,null);
+                    $this->associated_results[$associated_table][$this_field_join] = null;
                     $query->addSelect($associated_table . '.' . $this_field_join . ' AS ASSOC^' . $associated_table . '^' . $this_field_join);
                     if(!in_array($associated_table,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
                         $query->where(function ($query) { $query->whereIn($associated_table . '.' . 'groups_id',session('user_groups_list'))->orWhereNull($associated_table . '.' . 'groups_id'); });
-                    elseif($this->table_name == 'groups' && !user_has_role(ROLEIDS["ADMIN"]))
+                    elseif($associated_table == 'groups' && !user_has_role(ROLEIDS["ADMIN"]))
                         $query->where(function ($query) { $query->whereIn($associated_table . '.' . 'id',session('user_groups_list')); });
                 }
             }
         }
         
+        if($include_referrals) {
+            foreach(explode(",",$include_referrals) as $this_referral) {
+                $query->leftJoin($this_referral,$this->table_name . ".id",'=',$this_referral . '.' . $this->table_name . '_id');
+                $schema_join = get_set_cache('column_listing_' . $this_referral,"DB::getSchemaBuilder()->getColumnListing('" . $this_referral . "');",CACHETIMEOUTS["SCHEMADATA"]);
+                foreach($schema_join as $this_field_join) {
+                    if($base_id == null || !is_int($base_id) || (int)$base_id < 0)
+                        $this->referring_results[$this_referral]['id_0'][$this_field_join] = null;
+                    $query->addSelect($this_referral . '.' . $this_field_join . ' AS REF^' . $this_referral . '^' . $this_field_join);
+                    if(!in_array($this_referral,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
+                        $query->where(function ($query) { $query->whereIn($this_referral . '.' . 'groups_id',session('user_groups_list'))->orWhereNull($this_referral . '.' . 'groups_id'); });
+                    elseif($this_referral == 'groups' && !user_has_role(ROLEIDS["ADMIN"]))
+                        $query->where(function ($query) { $query->whereIn($this_referral . '.' . 'id',session('user_groups_list')); });
+                }
+            }
+        }
+
         if($base_id == null || !is_int($base_id) || (int)$base_id < 0)
             return true;
 
-        $query->where($this->table_name . '.id','=',(int)$base_id);
-        if(!in_array($this->table_name,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
-            $query->where(function ($query) { $query->whereIn($this->table_name . '.' . 'groups_id',session('user_groups_list'))->orWhereNull($this->table_name . '.' . 'groups_id'); });
-        elseif($this->table_name == 'groups' && !user_has_role(ROLEIDS["ADMIN"]))
-            $query->where(function ($query) { $query->whereIn($this->table_name . '.' . 'id',session('user_groups_list')); });
+        if($include_referrals) {
+            $db_objs = $query->get();
+            $db_obj = $db_objs[0];
+            foreach($db_objs as $this_referral) {
+                foreach($this_referral as $key => $val) {
+                    if(str_starts_with($key,'REF^')) {
+                        $ref_row = explode("^",$key);
+                        $row_name = "REF^" . $ref_row[1] . "^id";
+                        $this_id = "id_" . $this_referral->$row_name;
+                        $this->referring_results[$ref_row[1]][$this_id][$ref_row[2]] = $val;
+                    }
+                }
+            }
+        } else
+            $db_obj = $query->first();
 
-        $db_obj = $query->first();
         if(isset($db_obj->id) && (int)$db_obj->id === $base_id) {
             foreach($db_obj as $key => $value) {
                 $this->$key = $value;
-                $this->initial_values[$key] = $value;
+                if(!str_starts_with($key,'ASSOC^') && !str_starts_with($key,'REF^'))
+                    $this->initial_values[$key] = $value;
+                elseif(str_starts_with($key,'ASSOC^')) {
+                    $assoc_row = explode("^",$key);
+                    $this->associated_results[$assoc_row[1]][$assoc_row[2]] = $value;
+                }
             }
             return true;
         } else {
@@ -84,15 +122,36 @@ class Blank extends Model {
         return false;
     }
     
-    public function get_assoc_value($assoc_table,$assoc_field) {
-        $test_field = 'ASSOC^' . $assoc_table . '^' . $assoc_field;
-        if(isset($this->$test_field))
-            return $this->$test_field;
+    public function get_assoc_value($assoc_table=null,$assoc_field=null) {
+        
+        $assoc_values = $this->associated_results;
+        
+        if($assoc_table && isset($assoc_values[$assoc_table]))
+            $assoc_values = $assoc_values[$assoc_table];
+        
+        if($assoc_field && isset($assoc_values[$assoc_field]))
+            $assoc_values = $assoc_values[$assoc_field];
+            
+        return $assoc_values;
 
-        return false;
     }
 
-    public function get_all($limit_by=null,$sort_by=null,$include_associated=false) {
+    public function get_ref_values($ref_table = null,$ref_id = null,$ref_field = null) {
+        $ref_values = $this->referring_results;
+        
+        if($ref_table)
+            $ref_values = $ref_values[$ref_table];
+
+        if($ref_id)
+            $ref_values = $ref_values['id_' . $ref_id];
+        
+        if($ref_field)
+            $ref_values = $ref_values[$ref_field];
+
+        return $ref_values;
+    }
+
+    public function get_all($limit_by=null,$sort_by=null,$include_associated=false,$include_referrals=false) {
         if($this->table_name == null)
             return false;
 
@@ -112,7 +171,7 @@ class Blank extends Model {
         $object_ids = $query->get();
 
         foreach($object_ids as $this_id) {
-            $tmp = new Blank($this->table_name,$this_id->id,$include_associated);
+            $tmp = new Blank($this->table_name,$this_id->id,$include_associated,$include_referrals);
             if($tmp->id == $this_id->id)  {
                 array_push($all_objects,$tmp);
             }
