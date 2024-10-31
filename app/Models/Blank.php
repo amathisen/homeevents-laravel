@@ -66,7 +66,7 @@ class Blank extends Model {
                 $schema_join = get_set_cache('column_listing_' . $this_referral,"DB::getSchemaBuilder()->getColumnListing('" . $this_referral . "');",CACHETIMEOUTS["SCHEMADATA"]);
                 foreach($schema_join as $this_field_join) {
                     if($base_id == null || !is_int($base_id) || (int)$base_id < 0)
-                        $this->referring_results[$this_referral]['id_0'][$this_field_join] = null;
+                        $this->referring_results[$this_referral]['0'][$this_field_join] = null;
                     $query->addSelect($this_referral . '.' . $this_field_join . ' AS REF^' . $this_referral . '^' . $this_field_join);
                     if(!in_array($this_referral,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
                         $query->where(function ($query) { $query->whereIn($this_referral . '.' . 'groups_id',session('user_groups_list'))->orWhereNull($this_referral . '.' . 'groups_id'); });
@@ -87,7 +87,7 @@ class Blank extends Model {
                     if(str_starts_with($key,'REF^')) {
                         $ref_row = explode("^",$key);
                         $row_name = "REF^" . $ref_row[1] . "^id";
-                        $this_id = "id_" . $this_referral->$row_name;
+                        $this_id = $this_referral->$row_name;
                         $this->referring_results[$ref_row[1]][$this_id][$ref_row[2]] = $val;
                     }
                 }
@@ -143,7 +143,7 @@ class Blank extends Model {
             $ref_values = $ref_values[$ref_table];
 
         if($ref_id)
-            $ref_values = $ref_values['id_' . $ref_id];
+            $ref_values = $ref_values[$ref_id];
         
         if($ref_field)
             $ref_values = $ref_values[$ref_field];
