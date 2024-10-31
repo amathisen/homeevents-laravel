@@ -45,7 +45,8 @@ class Blank extends Model {
         foreach($schema as $this_field) {
             $this->set_value($this_field,null);
             $query->addSelect($this->table_name . '.' . $this_field . ' AS ' . $this_field);
-            if($include_associated && str_ends_with($this_field,"_id")) {
+            
+            if($include_associated && str_ends_with($this_field,"_id") && in_array(substr($this_field,0,-3),explode(",",$include_associated))) {
                 $associated_table = substr($this_field,0,-3);
                 $query->join($associated_table,$this->table_name . "." . $this_field,'=',$associated_table . '.id');
                 $schema_join = get_set_cache('column_listing_' . $associated_table,"DB::getSchemaBuilder()->getColumnListing('" . $associated_table . "');",CACHETIMEOUTS["SCHEMADATA"]);
