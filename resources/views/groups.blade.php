@@ -17,11 +17,16 @@
     </tr>
 @endforeach
 </table>
-<br><hr><br>
-@foreach($leaderboards as $this_leaderboard)
-    {{$this_leaderboard->show()}}
-    <br><br>
-@endforeach
+@if(count($leaderboards))
+<!-- Begin Leaderboards Block -->
+    <br><hr><br>
+    <h1>Leaderboards</h1>
+    @foreach($leaderboards as $this_leaderboard)
+        {{$this_leaderboard->show()}}
+        <br><br>
+    @endforeach
+<!-- End Leaderboards Block -->
+@endif
 <br><hr><br>
 <table>
 <tr><td class="title" colspan="3">Events</td></tr>
