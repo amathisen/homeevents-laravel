@@ -311,6 +311,30 @@ CREATE TABLE `jobs` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `leaderboard`
+--
+
+DROP TABLE IF EXISTS `leaderboard`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `leaderboard` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(90) DEFAULT NULL,
+  `description` mediumtext,
+  `activity_id` int(11) DEFAULT NULL,
+  `sql_function` varchar(90) DEFAULT NULL,
+  `sort_type` varchar(90) DEFAULT NULL,
+  `target_value` varchar(45) DEFAULT NULL,
+  `total_positions` int(4) DEFAULT NULL,
+  `minimum_results` int(4) DEFAULT NULL,
+  `groups_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `activity_id_idx` (`activity_id`),
+  KEY `groups_id_idx` (`groups_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `location`
 --
 
@@ -392,7 +416,7 @@ CREATE TABLE `roles` (
   `groups_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `groups_id_idx` (`groups_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -486,7 +510,7 @@ CREATE TABLE `users_roles` (
   PRIMARY KEY (`id`),
   KEY `roles_id_idx` (`roles_id`),
   KEY `user_id_idx` (`users_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -498,4 +522,4 @@ CREATE TABLE `users_roles` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-29 17:05:32
+-- Dump completed on 2024-11-04 21:29:30
