@@ -175,7 +175,14 @@ class Blank extends Model {
         $object_ids = $query->get();
 
         foreach($object_ids as $this_id) {
-            $tmp = new Blank($this->table_name,$this_id->id,$include_associated,$include_referrals);
+            switch($this->table_name) {
+                case 'leaderboard':
+                    $tmp = new Leaderboard($this_id->id,$include_associated,$include_referrals);
+                break;
+                default:
+                    $tmp = new Blank($this->table_name,$this_id->id,$include_associated,$include_referrals);
+            }
+            
             if($tmp->id == $this_id->id)  {
                 array_push($all_objects,$tmp);
             }

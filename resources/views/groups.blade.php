@@ -18,6 +18,11 @@
 @endforeach
 </table>
 <br><hr><br>
+@foreach($leaderboards as $this_leaderboard)
+    {{$this_leaderboard->show()}}
+    <br><br>
+@endforeach
+<br><hr><br>
 <table>
 <tr><td class="title" colspan="3">Events</td></tr>
 @foreach($group->get_ref_values('event') as $this_event)
