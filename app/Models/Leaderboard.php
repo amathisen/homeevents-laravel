@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Models\Blank;
+use DateTime;
 
 class Leaderboard extends Blank {
 
@@ -15,14 +16,27 @@ class Leaderboard extends Blank {
             return $this->set_values_by_id((int)$initial_id,$include_associated,$include_referrals,$sort_by);
     }
     
-    public function get_leaderboard() {
+    public function get_leaderboard($date_from=null,$date_to=null) {
         $data['name'] = $this->get_value('name');
         $data['description'] = $this->get_value('description');
         $data['results'] = array();
-        
+        $date_from_obj = DateTime::createFromFormat('Y-m-d H:i:s', $date_from);
+        $date_to_obj = DateTime::createFromFormat('Y-m-d H:i:s', $date_to);
+
         $query = DB::table('event_activities_results');
         $query->select('users_id',DB::raw($this->get_value('sql_function') . '(result_value) AS score'));
-        $query->whereRaw('event_activities_id IN(SELECT id FROM event_activities where activity_id = ' . $this->get_value('activity_id') . ' and groups_id = ' . $this->get_value('groups_id') . ')');
+        $date_limit = array();
+        
+        if($date_from_obj && $date_from_obj->format('Y-m-d H:i:s') == $date_from)
+            array_push($date_limit,"date >= '" . $date_from . "'");
+        if($date_to_obj && $date_to_obj->format('Y-m-d H:i:s') == $date_to)
+            array_push($date_limit,"date <= '" . $date_to . "'");
+        if(count($date_limit))
+            $date_limit = " AND event_id IN(SELECT id FROM event WHERE " . implode(" AND ",$date_limit) . ")";
+        else
+            $date_limit = "";
+        $query->whereRaw('event_activities_id IN(SELECT id FROM event_activities where activity_id = ' . $this->get_value('activity_id') . ' and groups_id = ' . $this->get_value('groups_id') . $date_limit . ')');
+
         $query->where('groups_id','=',$this->get_value('groups_id'));
         if($this->get_value('target_value'))
             $query->where('result_value','=',$this->get_value('target_value'));
@@ -41,9 +55,9 @@ class Leaderboard extends Blank {
         return $data;
     }
     
-    public function show() {
+    public function show($date_from=null,$date_to=null) {
         
-        $leaderboard = $this->get_leaderboard();
+        $leaderboard = $this->get_leaderboard(date_from:$date_from,date_to:$date_to);
         return view('leaderboard',compact("leaderboard"));
     }
 }
