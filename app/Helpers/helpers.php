@@ -50,9 +50,9 @@
         if(!$users_id)
             return false;
 
-        $users_roles = new Blank ("users_groups");
+        $users_groups = new Blank ("users_groups");
 
-        return ($users_roles->get_all(limit_by:"users_id = " . $users_id . " AND roles_groups_id = " . $roles_groups_id . " AND groups_id = " . $groups_id)) ? true : false;   
+        return ($users_groups->get_all(limit_by:"users_id = " . $users_id . " AND roles_groups_id = " . $roles_groups_id . " AND groups_id = " . $groups_id)) ? true : false;   
 
     }
 

@@ -70,9 +70,9 @@ class Blank extends Model {
                         $this->referring_results[$this_referral]['0'][$this_field_join] = null;
                     $query->addSelect($this_referral . '.' . $this_field_join . ' AS REF^' . $this_referral . '^' . $this_field_join);
                     if(!in_array($this_referral,TABLESNOGROUPNEEDED) && !user_has_role(ROLEIDS["ADMIN"]))
-                        $query->where(function ($query) { $query->whereIn($this_referral . '.' . 'groups_id',session('user_groups_list'))->orWhereNull($this_referral . '.' . 'groups_id'); });
+                        $query->where(function ($query) use($this_referral) { $query->whereIn($this_referral . '.' . 'groups_id',session('user_groups_list'))->orWhereNull($this_referral . '.' . 'groups_id'); });
                     elseif($this_referral == 'groups' && !user_has_role(ROLEIDS["ADMIN"]))
-                        $query->where(function ($query) { $query->whereIn($this_referral . '.' . 'id',session('user_groups_list')); });
+                        $query->where(function ($query) use($this_referral) { $query->whereIn($this_referral . '.' . 'id',session('user_groups_list')); });
                 }
             }
         }
