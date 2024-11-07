@@ -25,17 +25,15 @@ class Leaderboard extends Blank {
 
         $query = DB::table('event_activities_results');
         $query->select('users_id',DB::raw($this->get_value('sql_function') . '(result_value) AS score'));
-        $date_limit = array();
-        
+
+        $event_limit = array('groups_id = ' . $this->get_value('groups_id'));
         if($date_from_obj && $date_from_obj->format('Y-m-d H:i:s') == $date_from)
-            array_push($date_limit,"date >= '" . $date_from . "'");
+            array_push($event_limit,"date >= '" . $date_from . "'");
         if($date_to_obj && $date_to_obj->format('Y-m-d H:i:s') == $date_to)
-            array_push($date_limit,"date <= '" . $date_to . "'");
-        if(count($date_limit))
-            $date_limit = " AND event_id IN(SELECT id FROM event WHERE " . implode(" AND ",$date_limit) . ")";
-        else
-            $date_limit = "";
-        $query->whereRaw('event_activities_id IN(SELECT id FROM event_activities where activity_id = ' . $this->get_value('activity_id') . ' and groups_id = ' . $this->get_value('groups_id') . $date_limit . ')');
+            array_push($event_limit,"date <= '" . $date_to . "'");
+        $event_limit = " AND event_id IN(SELECT id FROM event WHERE " . implode(" AND ",$event_limit) . ")";
+
+        $query->whereRaw('event_activities_id IN(SELECT id FROM event_activities where activity_id = ' . $this->get_value('activity_id') . ' and groups_id = ' . $this->get_value('groups_id') . $event_limit . ')');
 
         $query->where('groups_id','=',$this->get_value('groups_id'));
         if($this->get_value('target_value'))
@@ -46,7 +44,7 @@ class Leaderboard extends Blank {
             $query->havingRaw('COUNT(result_value) >= ?',[$this->get_value('minimum_results')]);
         if($this->get_value('total_positions'))
             $query->limit($this->get_value('total_positions'));
-        
+
         $board_rs = $query->get();
         foreach($board_rs as $this_board_row) {
             array_push($data['results'],array('users_id' => $this_board_row->users_id,'score' => $this_board_row->score));
