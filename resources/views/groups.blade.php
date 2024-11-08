@@ -66,6 +66,7 @@
     </tr>
 </form>
 </table>
+<!-- End Add Event -->
 @endif
 
 @include('footer') 
