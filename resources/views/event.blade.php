@@ -3,7 +3,8 @@
 <center>
 <h1>{{$event->title}} - {{date_display($event->date);}}</h1>
 <h2>{!!get_href_by_type_and_id('location',$event->location_id)!!}</h2>
-<h3>@foreach($users as $this_user) {!!$this_user->get_href()!!}@endforeach</h3>
+<h3>{!!get_href_by_type_and_id('groups',$event->groups_id)!!}</h3>
+<h4>@foreach($users as $this_user) {!!$this_user->get_href()!!}@endforeach</h4>
 </center>
 <br><br>
 @foreach($activity_block as $this_activity)
