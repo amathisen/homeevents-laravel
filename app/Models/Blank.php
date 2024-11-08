@@ -233,7 +233,7 @@ class Blank extends Model {
         if(!$group_id)
             return false;
 
-        if(user_has_group_role($group_id,GROUPROLEIDS["ADMIN"],$user_id))
+        if(user_has_group_role($group_id,GROUPROLEIDS["ADMIN"],$user_id) || user_has_group_role($group_id,GROUPROLEIDS["CREATOR"],$user_id))
             return true;
 
         return false;

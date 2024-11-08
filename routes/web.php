@@ -33,7 +33,7 @@ Route::group( ['middleware' => 'auth' ], function() {
             Route::get('/', 'index')->name('show_object_types');
         });
         
-        Route::middleware('RolesCheck:' . ROLEIDS["ADMIN"] . "," . GROUPROLEIDS["ADMIN"])->controller(ObjectsController::class)->group(function () {
+        Route::middleware('RolesCheck:' . ROLEIDS["ADMIN"] . "," . GROUPROLEIDS["ADMIN"] . "^" . GROUPROLEIDS["CREATOR"])->controller(ObjectsController::class)->group(function () {
             Route::post('/crud', 'object_crud');
         });
 
