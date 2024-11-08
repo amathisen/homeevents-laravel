@@ -224,11 +224,26 @@ class Blank extends Model {
         
     }
     
-    public function save($delete=false) {
+    public function can_edit($user_id=null) {
+        
+        if(user_has_role(ROLEIDS["ADMIN"],$user_id))
+            return true;
 
-        if(!user_has_role(ROLEIDS["ADMIN"]))
+        $group_id = $this->get_value('groups_id');
+        if(!$group_id)
             return false;
 
+        if(user_has_group_role($group_id,GROUPROLEIDS["ADMIN"],$user_id))
+            return true;
+
+        return false;
+    }
+    
+    public function save($delete=false) {
+
+        if(!$this->can_edit())
+            return false;
+        
         $table_data = get_set_cache('schema_data_' . $this->table_name,"DB::getSchemaBuilder()->getColumns('" . $this->table_name . "');",CACHETIMEOUTS["SCHEMADATA"]);
         
         if(!$table_data)

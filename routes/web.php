@@ -28,10 +28,14 @@ Route::group( ['middleware' => 'auth' ], function() {
     Route::group(['prefix' => '/objects'], function()
     {
         Route::middleware('RolesCheck:' . ROLEIDS["ADMIN"])->controller(ObjectsController::class)->group(function () {
-            Route::post('/crud', 'object_crud');
             Route::get('/{object_type}/{object_id}', 'object_edit')->name('show_object');
             Route::get('/{object_type}', 'objects_list')->name('show_objects');
             Route::get('/', 'index')->name('show_object_types');
         });
+        
+        Route::middleware('RolesCheck:' . ROLEIDS["ADMIN"] . "," . GROUPROLEIDS["ADMIN"])->controller(ObjectsController::class)->group(function () {
+            Route::post('/crud', 'object_crud');
+        });
+
     });
 });
