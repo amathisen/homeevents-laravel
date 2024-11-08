@@ -39,4 +39,33 @@
 @endforeach
 </table>
 
+@if(user_has_role(ROLEIDS["ADMIN"]) || user_has_group_role($group->id,GROUPROLEIDS["ADMIN"]) || user_has_group_role($group->id,GROUPROLEIDS["CREATOR"]))
+<!-- Begin Add Event -->
+<br><hr><br>
+<table>
+<form method="post" action="/objects/crud">
+    @csrf
+    <input type="hidden" name="object_type" value="event">
+    <input type="hidden" name="groups_id" value="{{$group->id}}">
+    <input type="hidden" name="redirect_to" value="/event/NEWID">
+    <tr><td class="title" colspan="3">Add Event</td></tr>
+    <tr>
+        <td class="indent">Title</td>
+        <td>{!!$event->write_form_field("title",editable:true)[1]!!}</td>
+    </tr>
+    <tr>
+        <td class="indent">Location</td>
+        <td>{!!$event->write_form_field("location_id",editable:true)[1]!!}</td>
+    </tr>
+    <tr>
+        <td class="indent">Date</td>
+        <td>{!!$event->write_form_field("date",editable:true)[1]!!}</td>
+    </tr>
+    <tr>
+        <td colspan="2"><input type="submit" value="Create"></td>
+    </tr>
+</form>
+</table>
+@endif
+
 @include('footer') 

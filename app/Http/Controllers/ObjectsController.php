@@ -83,6 +83,6 @@ class ObjectsController extends Controller
             $second_obj->save();
         }
 
-        return (!isset($redirect_to)) ? redirect()->route('show_object',['object_type' => $object_type, 'object_id' => $tmp_obj->id]) : redirect($redirect_to);
+        return (!isset($redirect_to)) ? redirect()->route('show_object',['object_type' => $object_type, 'object_id' => $tmp_obj->id]) : redirect(str_replace("NEWID",$tmp_obj->id,$redirect_to));
     }
 }
