@@ -15,16 +15,17 @@ class Blank extends Model {
     private $initial_values = array();
     private $associated_results = array();
     private $referring_results = array();
+    private $notes = array();
 
     // Constructor to create a blank object. Pass in an ID to populate values for the matching id row in the DB
-    public function __construct($initial_table = null,$initial_id = null,$include_associated=false,$include_referrals=false,$sort_by=null) {
+    public function __construct($initial_table = null,$initial_id = null,$include_associated=false,$include_referrals=false,$include_notes=false,$sort_by=null) {
             $this->table_name = trim(strtolower($initial_table));
             $this->id = (int)$initial_id;
-            return $this->set_values_by_id((int)$initial_id,$include_associated,$include_referrals,$sort_by);
+            return $this->set_values_by_id((int)$initial_id,$include_associated,$include_referrals,$include_notes,$sort_by);
     }
     
     //Pass in an id to populate values for this object with the matching row in the DB
-    public function set_values_by_id($base_id,$include_associated=false,$include_referrals=false,$sort_by=false) {
+    public function set_values_by_id($base_id,$include_associated=false,$include_referrals=false,$include_notes=false,$sort_by=false) {
         
         $tables = get_set_cache('allowed_blank_tables',"array_diff(DB::getSchemaBuilder()->getTableListing(),TABLESNONOBJECT);",CACHETIMEOUTS["SCHEMADATA"]);
         if(!in_array($this->table_name,$tables)) {
@@ -43,7 +44,8 @@ class Blank extends Model {
             $query->where(function ($query) { $query->whereIn($this->table_name . '.' . 'id',session('user_groups_list')); });
 
         foreach($schema as $this_field) {
-            $this->set_value($this_field,null);
+            if($this_field != 'id')
+                $this->set_value($this_field,null);
             $query->addSelect($this->table_name . '.' . $this_field . ' AS ' . $this_field);
             
             if($include_associated && str_ends_with($this_field,"_id") && in_array(substr($this_field,0,-3),explode(",",$include_associated))) {
@@ -98,6 +100,9 @@ class Blank extends Model {
             }
         } else
             $db_obj = $query->first();
+
+        if($include_notes)
+            $this->get_notes(attach_results:true);
 
         if(isset($db_obj->id) && (int)$db_obj->id === $base_id) {
             foreach($db_obj as $key => $value) {
@@ -224,6 +229,32 @@ class Blank extends Model {
         
     }
     
+    public function get_notes($note_ids=null,$date_from=null,$date_to=null,$attach_results=false) {
+        $query = DB::table('notes');
+        $query->where('object_type','=',$this->table_name);
+        $query->where('object_identifier',$this->id);
+
+        if($note_ids) {
+            if(!is_array($note_ids))
+                $note_ids = explode(",",$note_ids);
+            $query->whereIn('id',$note_ids);
+            
+        }
+        if(!user_has_role(ROLEIDS["ADMIN"]))
+            $query->whereIn('groups_id',session('user_groups_list'))->orWhereNull('groups_id');
+        if($date_from)
+            $query->where('date','>=',$date_from);
+        if($date_to)
+            $query->where('date','<=',$date_to);
+
+        $notes_rs = $query->get()->toArray();
+        
+        if($attach_results)
+            $this->notes = $notes_rs;
+
+        return $notes_rs;
+    }
+
     public function can_edit($user_id=null) {
         
         if(user_has_role(ROLEIDS["ADMIN"],$user_id))
